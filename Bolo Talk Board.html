@@ -1,0 +1,1253 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Bolo Talk Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap">
+<style>
+/* Layout: one-screen communication device — message strip on top, always-visible quick answers, scrolling symbol grid colour-coded by the Modified Fitzgerald Key. */
+:root {
+  --bg: #E9EDF1;
+  --surface: #FFFFFF;
+  --surface-2: #F4F6F9;
+  --ink: #111C2A;
+  --muted: #56647A;
+  --line: #CDD5DF;
+  --accent: #1D43B0;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #DCE4FA;
+  --danger: #C4211E;
+  --danger-ink: #FFFFFF;
+  --focus: #F2A900;
+  /* Modified Fitzgerald Key: tint / edge */
+  --p-t: #FFF3BF; --p-e: #D9A900;
+  --v-t: #DAF1D5; --v-e: #2C9A3B;
+  --d-t: #D7E5FA; --d-e: #2E6CD2;
+  --n-t: #FFE2C4; --n-e: #DD7415;
+  --s-t: #FADBEA; --s-e: #C73A80;
+  --q-t: #E7DCF8; --q-e: #7A4AC9;
+  --x-t: #FAD8D8; --x-e: #CF2E2E;
+  --font: "Atkinson Hyperlegible", "Noto Sans Devanagari", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-hi: "Noto Sans Devanagari", "Atkinson Hyperlegible", system-ui, sans-serif;
+  --tile: 98px;
+  --r: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E141C; --surface: #18212C; --surface-2: #121A23; --ink: #EEF2F7; --muted: #9AA8BA; --line: #2B3848;
+    --accent: #7E9CFF; --accent-ink: #0B1330; --accent-soft: #1E2B55; --danger: #FF5A52; --danger-ink: #1A0000; --focus: #FFC940;
+    --p-t: #332C0E; --p-e: #E8C21E; --v-t: #14301A; --v-e: #4CC45C; --d-t: #132744; --d-e: #5B95F0;
+    --n-t: #3A2410; --n-e: #F0923A; --s-t: #3A1529; --s-e: #EE66AA; --q-t: #2A1D45; --q-e: #A47AF0; --x-t: #3D1414; --x-e: #F25555;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E141C; --surface: #18212C; --surface-2: #121A23; --ink: #EEF2F7; --muted: #9AA8BA; --line: #2B3848;
+  --accent: #7E9CFF; --accent-ink: #0B1330; --accent-soft: #1E2B55; --danger: #FF5A52; --danger-ink: #1A0000; --focus: #FFC940;
+  --p-t: #332C0E; --p-e: #E8C21E; --v-t: #14301A; --v-e: #4CC45C; --d-t: #132744; --d-e: #5B95F0;
+  --n-t: #3A2410; --n-e: #F0923A; --s-t: #3A1529; --s-e: #EE66AA; --q-t: #2A1D45; --q-e: #A47AF0; --x-t: #3D1414; --x-e: #F25555;
+  color-scheme: dark;
+}
+.hc {
+  --line: var(--ink);
+}
+html { height: 100%; box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
+body { height: 100%; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.4; -webkit-tap-highlight-color: transparent; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.hi, [lang="hi"] { font-family: var(--font-hi); }
+
+#app { height: 100%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; padding-inline: 12px; padding-block: 8px 10px; gap: 8px; }
+
+/* Top bar */
+.top { display: flex; align-items: center; gap: 8px; }
+.brand { display: flex; align-items: baseline; gap: 6px; margin-right: auto; min-width: 0; }
+.brand b { font-size: 1.35rem; letter-spacing: -0.01em; }
+.brand span { font-family: var(--font-hi); color: var(--muted); font-size: 1.05rem; }
+.seg { display: inline-flex; border: 1.5px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; background: transparent; padding: 6px 12px; font-weight: 700; min-height: 36px; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.icon-btn { border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; min-width: 40px; height: 40px; display: inline-grid; place-items: center; padding: 0 10px; font-weight: 700; }
+.help-btn { background: var(--danger); color: var(--danger-ink); border: 0; border-radius: 999px; height: 40px; padding: 0 16px; font-weight: 700; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 6px; }
+.help-btn svg { width: 18px; height: 18px; }
+
+/* Message strip */
+.strip { background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--r); display: flex; gap: 8px; padding: 8px; align-items: stretch; }
+.msg { flex: 1; min-width: 0; min-height: 64px; display: flex; flex-wrap: wrap; align-content: center; gap: 6px; padding: 4px; overflow-y: auto; max-height: 132px; }
+.msg .ph { color: var(--muted); font-size: 1.05rem; padding-left: 4px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 4px 9px; font-size: 1.2rem; font-weight: 700; }
+.chip img { width: 24px; height: 24px; border-radius: 6px; object-fit: cover; }
+.chip .e { font-size: 1.1rem; }
+.strip-actions { display: grid; grid-template-columns: auto auto; gap: 6px; flex-shrink: 0; }
+.speak { grid-row: span 2; background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 12px; padding: 0 18px; font-size: 1.15rem; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 88px; }
+.speak svg { width: 26px; height: 26px; }
+.sa { border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 10px; min-width: 48px; min-height: 44px; font-weight: 700; display: grid; place-items: center; padding: 0 8px; }
+.sa svg { width: 22px; height: 22px; }
+
+/* Quick answers */
+.quick { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.qb { border: 0; border-radius: 12px; min-height: 52px; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 4px; }
+.qb.yes { background: var(--v-t); box-shadow: inset 0 -4px 0 var(--v-e); }
+.qb.no { background: var(--x-t); box-shadow: inset 0 -4px 0 var(--x-e); }
+.qb.idk { background: var(--q-t); box-shadow: inset 0 -4px 0 var(--q-e); }
+.qb.wait { background: var(--d-t); box-shadow: inset 0 -4px 0 var(--d-e); }
+
+/* Modes + categories */
+.modes { display: flex; gap: 6px; }
+.modes button { flex: 1; border: 1.5px solid var(--line); background: var(--surface); border-radius: 10px; min-height: 40px; font-weight: 700; }
+.modes button[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.view { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
+.cats { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; flex-shrink: 0; }
+.cat { flex-shrink: 0; border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 13px; min-height: 40px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+.cat[aria-selected="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+.cat.edit[aria-pressed="true"] { background: var(--focus); color: #1A1300; border-color: var(--focus); }
+.grid-wrap { flex: 1; min-height: 0; overflow-y: auto; border-radius: var(--r); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--tile), 1fr)); gap: 8px; padding-bottom: 12px; }
+
+/* Tiles */
+.tile { position: relative; border: 0; border-radius: var(--r); background: var(--surface); min-height: var(--tile); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px 4px 10px; box-shadow: inset 0 0 0 1.5px var(--line); transition: transform .08s; }
+.tile:active { transform: scale(0.96); }
+.tile .sym { font-size: calc(var(--tile) * 0.36); line-height: 1.1; }
+.tile .sym img { width: calc(var(--tile) * 0.5); height: calc(var(--tile) * 0.5); border-radius: 10px; object-fit: cover; display: block; }
+.tile .lab { font-weight: 700; font-size: calc(var(--tile) * 0.165); line-height: 1.15; text-align: center; overflow-wrap: break-word; hyphens: auto; max-width: 100%; }
+.tile:not(.phrase) .lab.long { font-size: calc(var(--tile) * 0.13); }
+.tile .sub { font-size: calc(var(--tile) * 0.12); color: var(--muted); line-height: 1.1; text-align: center; }
+.tile.phrase { grid-column: span 2; flex-direction: row; justify-content: flex-start; text-align: left; gap: 10px; padding: 10px 12px; }
+.tile.phrase .sym { font-size: calc(var(--tile) * 0.3); flex-shrink: 0; }
+.tile.phrase .txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tile.phrase .lab, .tile.phrase .sub { text-align: left; }
+.tile.phrase .lab { font-size: calc(var(--tile) * 0.16); }
+.t-p { background: var(--p-t); box-shadow: inset 0 5px 0 var(--p-e); }
+.t-v { background: var(--v-t); box-shadow: inset 0 5px 0 var(--v-e); }
+.t-d { background: var(--d-t); box-shadow: inset 0 5px 0 var(--d-e); }
+.t-n { background: var(--n-t); box-shadow: inset 0 5px 0 var(--n-e); }
+.t-s { background: var(--s-t); box-shadow: inset 0 5px 0 var(--s-e); }
+.t-q { background: var(--q-t); box-shadow: inset 0 5px 0 var(--q-e); }
+.t-x { background: var(--x-t); box-shadow: inset 0 5px 0 var(--x-e); }
+.tile.phrase.t-s, .tile.phrase.t-p, .tile.phrase.t-v, .tile.phrase.t-d, .tile.phrase.t-n, .tile.phrase.t-q, .tile.phrase.t-x { box-shadow: inset 5px 0 0 var(--edge, var(--s-e)); }
+.tile.phrase.t-p { --edge: var(--p-e); } .tile.phrase.t-v { --edge: var(--v-e); } .tile.phrase.t-d { --edge: var(--d-e); } .tile.phrase.t-n { --edge: var(--n-e); } .tile.phrase.t-q { --edge: var(--q-e); } .tile.phrase.t-x { --edge: var(--x-e); }
+.hc .tile { outline: 2px solid var(--ink); outline-offset: -2px; }
+.tile.add { background: transparent; box-shadow: inset 0 0 0 2px var(--muted); border: 0; color: var(--muted); }
+.editing .tile:not(.add)::after { content: "Edit"; position: absolute; top: 6px; right: 6px; font-size: 11px; font-weight: 700; background: var(--ink); color: var(--bg); padding: 1px 6px; border-radius: 6px; }
+.tile.flash { animation: flash .35s; }
+@keyframes flash { 0% { filter: brightness(1.25); } 100% { filter: none; } }
+.empty { grid-column: 1 / -1; color: var(--muted); padding: 24px 8px; text-align: center; }
+
+/* Type view */
+.panel { background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--r); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-bottom: 12px; }
+#typeBox { width: 100%; min-height: 110px; resize: vertical; border: 1.5px solid var(--line); border-radius: 12px; padding: 12px; font-size: 1.35rem; background: var(--surface-2); line-height: 1.35; }
+.preds { display: flex; gap: 6px; flex-wrap: wrap; min-height: 46px; }
+.pred { border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 8px 14px; font-size: 1.1rem; font-weight: 700; min-height: 44px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 10px 16px; font-weight: 700; min-height: 46px; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.danger { background: var(--danger); color: var(--danger-ink); border-color: var(--danger); }
+.btn.small { min-height: 36px; padding: 6px 12px; font-size: 0.95rem; }
+h2 { font-size: 1rem; margin: 0; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.saved { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+
+/* Pain view */
+.body-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+.opt { border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 12px; min-height: 52px; padding: 6px 8px; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.15; }
+.opt .e { font-size: 1.4rem; }
+.opt small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.opt[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); }
+.scale { display: grid; grid-template-columns: repeat(11, 1fr); gap: 4px; }
+.lvl { border: 0; border-radius: 10px; min-height: 56px; font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; color: #111; }
+.lvl[aria-pressed="true"] { outline: 4px solid var(--ink); outline-offset: 2px; }
+.scale-labels { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); }
+.pain-out { font-size: 1.2rem; font-weight: 700; background: var(--surface-2); border-radius: 12px; padding: 12px; border: 1.5px dashed var(--line); }
+
+/* Overlays */
+.overlay { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; }
+.sheet-bg { background: color-mix(in srgb, var(--ink) 45%, transparent); align-items: center; justify-content: flex-end; padding: 12px; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+.sheet { background: var(--surface); color: var(--ink); width: 100%; max-width: 640px; max-height: 100%; overflow-y: auto; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+@media (min-width: 700px) { .sheet-bg { justify-content: center; } }
+.sheet h3 { margin: 0; font-size: 1.35rem; }
+.sheet p { margin: 0; color: var(--muted); max-width: 65ch; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-weight: 700; font-size: 0.95rem; }
+.field .hint { color: var(--muted); font-size: 0.85rem; }
+.field input[type="text"], .field input[type="tel"], .field textarea, .field select { border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 10px 12px; min-height: 44px; width: 100%; }
+.field input[type="range"] { width: 100%; accent-color: var(--accent); }
+.check { display: flex; align-items: center; gap: 10px; min-height: 40px; font-weight: 700; }
+.check input { width: 22px; height: 22px; accent-color: var(--accent); }
+.sec { display: flex; flex-direction: column; gap: 10px; padding-top: 12px; border-top: 1.5px solid var(--line); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 460px) { .two { grid-template-columns: 1fr; } }
+.key { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.key span { border-radius: 8px; padding: 6px 10px; font-weight: 700; font-size: 0.9rem; }
+.notice { background: var(--p-t); border-left: 5px solid var(--p-e); padding: 10px 12px; border-radius: 8px; font-size: 0.95rem; color: var(--ink); }
+
+#show { background: var(--surface); color: var(--ink); z-index: 60; }
+#show .bar, #sos .bar { display: flex; gap: 8px; justify-content: flex-end; padding: 12px; padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
+#showText { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px 24px 40px; font-weight: 700; line-height: 1.12; overflow: hidden; overflow-wrap: anywhere; transition: transform .3s; }
+#showText.flip { transform: rotate(180deg); }
+#sos { background: var(--danger); color: var(--danger-ink); z-index: 70; }
+#sos .bar .btn { background: color-mix(in srgb, var(--danger-ink) 14%, transparent); border-color: color-mix(in srgb, var(--danger-ink) 40%, transparent); color: var(--danger-ink); }
+.sos-body { flex: 1; overflow-y: auto; padding: 8px 20px 32px; display: flex; flex-direction: column; gap: 16px; align-items: center; text-align: center; justify-content: center; }
+.sos-big { font-size: clamp(2.4rem, 10vw, 5.5rem); font-weight: 700; line-height: 1.05; margin: 0; }
+.sos-hi { font-family: var(--font-hi); font-size: clamp(2rem, 8vw, 4.5rem); font-weight: 700; line-height: 1.2; margin: 0; }
+.sos-info { font-size: clamp(1.1rem, 4vw, 1.6rem); max-width: 40ch; display: flex; flex-direction: column; gap: 6px; }
+.sos-info .num { font-size: clamp(1.6rem, 7vw, 2.6rem); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0.03em; user-select: all; }
+
+#toast { position: fixed; left: 50%; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 12px; font-weight: 700; z-index: 90; max-width: calc(100% - 32px); text-align: center; }
+
+/* Switch scanning */
+#catcher { position: fixed; inset: 0; z-index: 40; background: transparent; }
+#catcher .stop { position: absolute; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); border: 0; border-radius: 999px; padding: 10px 16px; font-weight: 700; overflow: hidden; }
+#catcher .stop i { position: absolute; left: 0; bottom: 0; height: 4px; width: 0; background: var(--focus); }
+#catcher .stop.holding i { width: 100%; transition: width 2s linear; }
+.scan-g { outline: 4px solid var(--focus) !important; outline-offset: 1px; }
+.scan-i { outline: 6px solid var(--focus) !important; outline-offset: 2px; transform: scale(1.04); z-index: 2; }
+
+@media (max-width: 520px) {
+  .brand span { display: none; }
+  .help-btn .lbl { display: none; }
+  .help-btn { padding: 0 12px; }
+  .speak { min-width: 74px; padding: 0 12px; }
+  .qb { font-size: 1rem; min-height: 48px; }
+  .scale { grid-template-columns: repeat(6, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div id="app">
+  <header class="top">
+    <div class="brand"><b>Bolo</b><span>बोलो</span></div>
+    <div class="seg" role="group" aria-label="Language">
+      <button id="lang-en" aria-pressed="true">EN</button>
+      <button id="lang-hi" aria-pressed="false" class="hi">हिं</button>
+    </div>
+    <button class="icon-btn" id="btnAbout" aria-label="About Bolo">?</button>
+    <button class="icon-btn" id="btnSettings" aria-label="Settings">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <button class="help-btn" id="btnSos" aria-label="Emergency help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 4v10"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/></svg>
+      <span class="lbl" data-ui="help">Help</span>
+    </button>
+  </header>
+
+  <section class="strip" aria-label="Message">
+    <div class="msg" id="msg" aria-live="polite"></div>
+    <div class="strip-actions">
+      <button class="speak" id="btnSpeak">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+        <span data-ui="speak">Speak</span>
+      </button>
+      <button class="sa" id="btnBack" aria-label="Delete last word">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 5H9l-7 7 7 7h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"/><path d="m17 9-6 6M11 9l6 6"/></svg>
+      </button>
+      <button class="sa" id="btnShow" aria-label="Show message in large text">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <div class="quick" role="group" aria-label="Quick answers">
+    <button class="qb yes" data-q="yes"></button>
+    <button class="qb no" data-q="no"></button>
+    <button class="qb idk" data-q="idk"></button>
+    <button class="qb wait" data-q="wait"></button>
+  </div>
+
+  <nav class="modes" role="tablist" aria-label="Mode">
+    <button role="tab" data-mode="board" aria-selected="true" data-ui="board">Board</button>
+    <button role="tab" data-mode="type" aria-selected="false" data-ui="type">Type</button>
+    <button role="tab" data-mode="pain" aria-selected="false" data-ui="pain">Pain</button>
+  </nav>
+
+  <main>
+    <section class="view" id="view-board">
+      <div class="cats" id="cats" role="tablist" aria-label="Categories"></div>
+      <div class="grid-wrap" id="gridWrap"><div class="grid" id="grid"></div></div>
+    </section>
+
+    <section class="view" id="view-type" hidden>
+      <div class="scroll">
+        <div class="panel">
+          <textarea id="typeBox" aria-label="Type your message" placeholder="Type here. Suggestions appear below."></textarea>
+          <div class="preds" id="preds" aria-label="Word suggestions"></div>
+          <div class="row">
+            <button class="btn primary" id="typeSpeak" data-ui="speak">Speak</button>
+            <button class="btn" id="typeAdd">Add to message</button>
+            <button class="btn" id="typeSave">Save as phrase</button>
+            <button class="btn" id="typeClear">Clear</button>
+          </div>
+        </div>
+        <h2>Saved phrases</h2>
+        <div class="saved" id="savedList"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-pain" hidden>
+      <div class="scroll">
+        <div class="panel">
+          <h2 data-ui="where">Where does it hurt?</h2>
+          <div class="body-grid" id="painParts"></div>
+        </div>
+        <div class="panel">
+          <h2 data-ui="howmuch">How bad is it? 0 to 10</h2>
+          <div class="scale" id="painScale"></div>
+          <div class="scale-labels"><span data-ui="nopain">No pain</span><span data-ui="worst">Worst possible</span></div>
+        </div>
+        <div class="panel">
+          <h2 data-ui="feels">What does it feel like?</h2>
+          <div class="body-grid" id="painKinds"></div>
+          <div class="body-grid" id="painTime"></div>
+        </div>
+        <div class="panel">
+          <div class="pain-out" id="painOut"></div>
+          <div class="row">
+            <button class="btn primary" id="painSpeak" data-ui="speak">Speak</button>
+            <button class="btn" id="painShowBtn">Show</button>
+            <button class="btn" id="painReset">Reset</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="overlay" id="show" hidden role="dialog" aria-label="Large text">
+  <div class="bar">
+    <button class="btn" id="showFlip">Flip to face them</button>
+    <button class="btn" id="showSpeak">Speak</button>
+    <button class="btn primary" id="showClose">Close</button>
+  </div>
+  <div id="showText"></div>
+</div>
+
+<div class="overlay" id="sos" hidden role="alertdialog" aria-label="Emergency">
+  <div class="bar">
+    <button class="btn" id="sosSpeak">Say it again</button>
+    <button class="btn" id="sosClose">Close</button>
+  </div>
+  <div class="sos-body">
+    <p class="sos-big">I need help now</p>
+    <p class="sos-hi" lang="hi">मुझे अभी मदद चाहिए</p>
+    <div class="sos-info" id="sosInfo"></div>
+  </div>
+</div>
+
+<div class="overlay sheet-bg" id="sheetWrap" hidden>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+</div>
+
+<div id="catcher" hidden>
+  <button class="stop" id="scanStop">Hold 2 s to stop scanning<i></i></button>
+</div>
+<div id="toast" hidden role="status"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------------- Vocabulary ----------------
+   Line format: id | symbol | English | Hindi | type | Hindi feminine form (optional)
+   Types follow the Modified Fitzgerald Key: p people/pronouns, v verbs, d describing,
+   n nouns, s social, q questions, x negation/stop. */
+const RAW = {
+core: `
+i|🙋|I|मैं|p
+you|👉|you|आप|p
+me|🫵|me|मुझे|p
+we|👥|we|हम|p
+this|👇|this|यह|p
+want|🤲|want|चाहिए|v
+need|❗|need|ज़रूरत है|v
+go|🚶|go|जाना|v
+come|👋|come|आना|v
+eat|🍽️|eat|खाना|v
+drink|🥤|drink|पीना|v
+help|🆘|help|मदद|v
+like|👍|like|पसंद है|v
+is|🟰|is / am|है|v
+look|👀|look|देखना|v
+sleep|😴|sleep|सोना|v
+give|🎁|give|दीजिए|v
+open|🔓|open|खोलिए|v
+close|🔒|close|बंद कीजिए|v
+talk|🗣️|talk|बात करना|v
+hurt|🤕|hurts|दर्द है|v
+more|➕|more|और|d
+again|🔁|again|फिर से|d
+finished|✅|all done|ख़त्म|d
+good|👌|good|अच्छा|d
+bad|👎|bad|बुरा|d
+hot|🔥|hot|गरम|d
+cold|🧊|cold|ठंडा|d
+big|🔺|big|बड़ा|d
+little|🔹|little|छोटा|d
+now|⏱️|now|अभी|d
+later|🕒|later|बाद में|d
+here|📍|here|यहाँ|d
+there|↗️|there|वहाँ|d
+what|❓|what|क्या|q
+where|🗺️|where|कहाँ|q
+when|📅|when|कब|q
+who|🧑|who|कौन|q
+why|🤔|why|क्यों|q
+how|❔|how|कैसे|q
+please|🙏|please|कृपया|s
+thanks|💐|thank you|धन्यवाद|s
+hello|🙂|hello|नमस्ते|s
+sorry|😔|sorry|माफ़ कीजिए|s
+not|❌|not|नहीं|x
+dont|🚫|don't|मत|x
+stop|✋|stop|रुकिए|x`,
+phrases: `
+ph-help|🆘|I need help.|मुझे मदद चाहिए।|s
+ph-pain|🤕|I am in pain.|मुझे दर्द हो रहा है।|s
+ph-toilet|🚻|I need the toilet.|मुझे शौचालय जाना है।|s
+ph-thirsty|💧|I am thirsty.|मुझे प्यास लगी है।|s
+ph-hungry|🍛|I am hungry.|मुझे भूख लगी है।|s
+ph-typing|⌛|Please wait, my answer is coming.|कृपया थोड़ा इंतज़ार कीजिए, मेरा जवाब आ रहा है।|s
+ph-understand|👂|I understand you, but I cannot speak.|मैं आपकी बात समझ रहा हूँ, पर बोल नहीं सकता।|s|मैं आपकी बात समझ रही हूँ, पर बोल नहीं सकती।
+ph-yesno|☯️|Please ask me yes or no questions.|कृपया मुझसे हाँ या ना वाले सवाल पूछिए।|s
+ph-slow|🐢|Please speak slowly.|कृपया धीरे बोलिए।|s
+ph-repeat|🔁|Please say that again.|कृपया फिर से कहिए।|s
+ph-dontunderstand|😕|I don't understand.|मुझे समझ नहीं आया।|s
+ph-tired|🥱|I am tired.|मैं थक गया हूँ।|s|मैं थक गई हूँ।
+ph-cold|🥶|I feel cold.|मुझे ठंड लग रही है।|s
+ph-hot|🥵|I feel hot.|मुझे गर्मी लग रही है।|s
+ph-sit|🪑|I want to sit up.|मुझे उठकर बैठना है।|s
+ph-turn|🔄|Please change my position.|कृपया मेरी करवट बदल दीजिए।|s
+ph-breathe|🫁|I am having trouble breathing.|मुझे साँस लेने में तकलीफ़ हो रही है।|s
+ph-nurse|🧑‍⚕️|Please call the nurse.|कृपया नर्स को बुलाइए।|s
+ph-doctor|🩺|Please call the doctor.|कृपया डॉक्टर को बुलाइए।|s
+ph-family|👨‍👩‍👧|Please call my family.|कृपया मेरे परिवार को बुलाइए।|s
+ph-alone|🚪|Please leave me alone for a while.|कृपया मुझे थोड़ी देर अकेला छोड़ दीजिए।|s|कृपया मुझे थोड़ी देर अकेली छोड़ दीजिए।
+ph-love|❤️|I love you.|मैं तुमसे प्यार करता हूँ।|s|मैं तुमसे प्यार करती हूँ।
+ph-thanks|🙏|Thank you for helping me.|मेरी मदद करने के लिए धन्यवाद।|s
+ph-ok|👌|I am okay.|मैं ठीक हूँ।|s`,
+feelings: `
+happy|😊|happy|खुश|d
+sad|😢|sad|उदास|d
+angry|😠|angry|गुस्सा|d
+scared|😨|scared|डर लग रहा है|d
+worried|😟|worried|चिंता हो रही है|d
+tired|🥱|tired|थका हुआ|d|थकी हुई
+bored|😑|bored|ऊब गया|d|ऊब गई
+confused|😵‍💫|confused|उलझन में|d
+calm|😌|calm|शांत|d
+sick|🤢|sick|बीमार|d
+lonely|🫥|lonely|अकेला|d|अकेली
+dizzy|💫|dizzy|चक्कर आ रहा है|d
+itchy|🫳|itchy|खुजली हो रही है|d
+uncomfortable|😣|uncomfortable|बेचैनी हो रही है|d
+better|📈|better|बेहतर|d
+worse|📉|worse|और बुरा|d`,
+food: `
+water|💧|water|पानी|n
+tea|🍵|tea|चाय|n
+coffee|☕|coffee|कॉफ़ी|n
+milk|🥛|milk|दूध|n
+juice|🧃|juice|जूस|n
+food|🍛|food|खाना|n
+rice|🍚|rice|चावल|n
+roti|🫓|roti|रोटी|n
+dal|🍲|dal|दाल|n
+curd|🥣|curd|दही|n
+fruit|🍎|fruit|फल|n
+banana|🍌|banana|केला|n
+egg|🥚|egg|अंडा|n
+biscuit|🍪|biscuit|बिस्कुट|n
+sweet|🍬|sweets|मिठाई|n
+soup|🥣|soup|सूप|n
+icecream|🍨|ice cream|आइसक्रीम|n
+salt|🧂|salt|नमक|n`,
+body: `
+b-head|🧠|head|सिर|n
+b-eyes|👁️|eyes|आँखें|n
+b-ear|👂|ear|कान|n
+b-mouth|👄|mouth|मुँह|n
+b-teeth|🦷|teeth|दाँत|n
+b-throat|🗣️|throat|गला|n
+b-chest|🫁|chest|सीना|n
+b-stomach|🤰|stomach|पेट|n
+b-back|🔙|back|पीठ|n
+b-arm|💪|arm|बाँह|n
+b-hand|✋|hand|हाथ|n
+b-leg|🦵|leg|टाँग|n
+b-foot|🦶|foot|पैर|n
+medicine|💊|medicine|दवा|n
+toilet|🚻|toilet|शौचालय|n
+bath|🛁|bath|नहाना|v
+brush|🪥|brush teeth|ब्रश करना|v
+suction|🌬️|suction|सक्शन|n`,
+people: `
+mother|👩|mother|माँ|p
+father|👨|father|पिता|p
+brother|👦|brother|भाई|p
+sister|👧|sister|बहन|p
+son|🧒|son|बेटा|p
+daughter|👧|daughter|बेटी|p
+husband|🤵|husband|पति|p
+wife|👰|wife|पत्नी|p
+grandma|👵|grandma|दादी|p
+grandpa|👴|grandpa|दादा|p
+friend|🤝|friend|दोस्त|p
+doctor|🩺|doctor|डॉक्टर|p
+nurse|🧑‍⚕️|nurse|नर्स|p
+teacher|🧑‍🏫|teacher|शिक्षक|p
+caregiver|🫶|helper|सहायक|p`,
+things: `
+fan|🌀|fan|पंखा|n
+light|💡|light|बत्ती|n
+ac|❄️|AC|एसी|n
+tv|📺|TV|टीवी|n
+phone|📱|phone|फ़ोन|n
+music|🎵|music|संगीत|n
+book|📖|book|किताब|n
+news|📰|newspaper|अख़बार|n
+blanket|🛌|blanket|कंबल|n
+pillow|🛏️|pillow|तकिया|n
+glasses|👓|glasses|चश्मा|n
+wheelchair|♿|wheelchair|व्हीलचेयर|n
+clothes|👕|clothes|कपड़े|n
+window|🪟|window|खिड़की|n
+door|🚪|door|दरवाज़ा|n
+prayer|🛕|prayer|प्रार्थना|n`,
+places: `
+home|🏠|home|घर|n
+bed|🛏️|bed|बिस्तर|n
+bathroom|🚿|bathroom|बाथरूम|n
+kitchen|🍳|kitchen|रसोई|n
+outside|🌳|outside|बाहर|n
+hospital|🏥|hospital|अस्पताल|n
+school|🏫|school|स्कूल|n
+shop|🏪|shop|दुकान|n
+car|🚗|car|गाड़ी|n
+park|🏞️|park|पार्क|n`
+};
+
+const CATS = [
+  { id: 'core', en: 'Core words', hi: 'मुख्य शब्द', e: '⭐' },
+  { id: 'phrases', en: 'Phrases', hi: 'वाक्य', e: '💬' },
+  { id: 'feelings', en: 'Feelings', hi: 'भावनाएँ', e: '😊' },
+  { id: 'food', en: 'Food & drink', hi: 'खाना-पीना', e: '🍛' },
+  { id: 'body', en: 'Body & care', hi: 'शरीर व देखभाल', e: '🩺' },
+  { id: 'people', en: 'People', hi: 'लोग', e: '👪' },
+  { id: 'things', en: 'Things', hi: 'चीज़ें', e: '📺' },
+  { id: 'places', en: 'Places', hi: 'जगहें', e: '🏠' },
+  { id: 'mine', en: 'My phrases', hi: 'मेरे वाक्य', e: '📝' },
+  { id: 'recent', en: 'Recent', hi: 'हाल के', e: '🕘' }
+];
+
+const TYPES = {
+  p: { en: 'People & pronouns', c: 'yellow' }, v: { en: 'Actions (verbs)', c: 'green' },
+  d: { en: 'Describing words', c: 'blue' }, n: { en: 'Things & places (nouns)', c: 'orange' },
+  s: { en: 'Social & phrases', c: 'pink' }, q: { en: 'Questions', c: 'purple' }, x: { en: 'No, not, stop', c: 'red' }
+};
+
+const DEFAULTS = {};
+const BYID = {};
+for (const [cat, txt] of Object.entries(RAW)) {
+  DEFAULTS[cat] = txt.trim().split('\n').map(line => {
+    const [id, e, en, hi, t, hiF] = line.split('|');
+    const tile = { id, e, en, hi, t, hiF: hiF || '', phrase: cat === 'phrases', def: true };
+    BYID[id] = tile;
+    return tile;
+  });
+}
+
+const QUICK = {
+  yes: { en: 'Yes', hi: 'हाँ', e: '✔️' },
+  no: { en: 'No', hi: 'नहीं', e: '✖️' },
+  idk: { en: "I don't know", hi: 'मुझे नहीं पता', e: '🤷', short: { en: "Don't know", hi: 'पता नहीं' } },
+  wait: { en: 'Wait, please', hi: 'एक मिनट रुकिए', e: '✋', short: { en: 'Wait', hi: 'रुकिए' } }
+};
+
+const UI = {
+  speak: ['Speak', 'बोलिए'], help: ['Help', 'मदद'], board: ['Board', 'बोर्ड'], type: ['Type', 'लिखें'], pain: ['Pain', 'दर्द'],
+  ph: ['Tap pictures to build a message', 'संदेश बनाने के लिए चित्र दबाएँ'],
+  where: ['Where does it hurt?', 'दर्द कहाँ है?'], howmuch: ['How bad is it? 0 to 10', 'दर्द कितना है? 0 से 10'],
+  nopain: ['No pain', 'कोई दर्द नहीं'], worst: ['Worst possible', 'असहनीय'], feels: ['What does it feel like?', 'दर्द कैसा है?']
+};
+
+/* ---------------- Pain builder data ---------------- */
+const PAIN_PARTS = [
+  ['head', '🧠', 'head', 'सिर', 'मेरे सिर में'], ['eyes', '👁️', 'eyes', 'आँखें', 'मेरी आँखों में'],
+  ['ear', '👂', 'ear', 'कान', 'मेरे कान में'], ['teeth', '🦷', 'teeth', 'दाँत', 'मेरे दाँतों में'],
+  ['throat', '🗣️', 'throat', 'गला', 'मेरे गले में'], ['neck', '🧣', 'neck', 'गर्दन', 'मेरी गर्दन में'],
+  ['shoulder', '🤷', 'shoulder', 'कंधा', 'मेरे कंधे में'], ['chest', '🫁', 'chest', 'सीना', 'मेरे सीने में'],
+  ['stomach', '🤰', 'stomach', 'पेट', 'मेरे पेट में'], ['back', '🔙', 'back', 'पीठ', 'मेरी पीठ में'],
+  ['arm', '💪', 'arm', 'बाँह', 'मेरी बाँह में'], ['hand', '✋', 'hand', 'हाथ', 'मेरे हाथ में'],
+  ['hip', '🦴', 'hip', 'कूल्हा', 'मेरे कूल्हे में'], ['leg', '🦵', 'leg', 'टाँग', 'मेरी टाँग में'],
+  ['knee', '🦿', 'knee', 'घुटना', 'मेरे घुटने में'], ['foot', '🦶', 'foot', 'पैर', 'मेरे पैर में'],
+  ['all', '🧍', 'everywhere', 'पूरे शरीर', 'मेरे पूरे शरीर में']
+];
+const PAIN_KINDS = [
+  ['sharp', '🔪', 'sharp', 'चुभन'], ['burning', '🔥', 'burning', 'जलन'], ['throbbing', '💓', 'throbbing', 'टीस'],
+  ['aching', '🪨', 'aching', 'दुखन'], ['cramping', '🌀', 'cramping', 'ऐंठन'], ['pressure', '⬇️', 'pressure', 'दबाव'],
+  ['numb', '🫥', 'numb', 'सुन्नपन'], ['itchy', '🫳', 'itchy', 'खुजली']
+];
+const PAIN_TIME = [
+  ['new', '🆕', 'It just started.', 'यह अभी शुरू हुआ है।', 'just started'],
+  ['worse', '📈', 'It is getting worse.', 'यह बढ़ता जा रहा है।', 'getting worse'],
+  ['same', '➖', 'It is the same as before.', 'यह पहले जैसा ही है।', 'same as before'],
+  ['better', '📉', 'It is getting better.', 'यह कम हो रहा है।', 'getting better']
+];
+const PAIN_WORD = n => n === 0 ? ['no pain', 'कोई दर्द नहीं'] : n <= 3 ? ['mild', 'हल्का'] : n <= 6 ? ['moderate', 'मध्यम'] : n <= 9 ? ['severe', 'तेज़'] : ['the worst possible', 'असहनीय'];
+const PAIN_COL = ['#7BD389', '#9ADB7E', '#B8E173', '#D5E368', '#F0E05E', '#F7C954', '#F8AF4B', '#F59242', '#EF703A', '#E54B34', '#D42A2E'];
+
+/* ---------------- Word prediction lexicon (rough frequency order) ---------------- */
+const LEX = ('i you the to a and is it that my me please need want help can not no yes what where when how why who do go come eat drink water ' +
+  'feel pain hurt hurts tired hungry thirsty cold hot toilet bathroom sleep bed sit up down turn move stop wait again later now today tomorrow yesterday ' +
+  'morning evening night doctor nurse medicine family mother father mom dad brother sister son daughter wife husband friend love thank thanks sorry ' +
+  'okay ok good bad better worse fine happy sad angry scared worried bored uncomfortable itchy dizzy sick breathe breathing air fan light tv phone ' +
+  'music call home outside open close window door blanket pillow glasses food tea coffee milk juice rice roti dal soup hello hi bye name am are was ' +
+  'will would could should have has had get give take put bring this there here some any all little lot very really just only think know understand ' +
+  'remember forget tell say ask talk listen hear see look watch read write minute hour time much many more less too also because but if so then ' +
+  'with without for from about after before into out of on off in at by your our their his her we they them us him it\'s i\'m don\'t can\'t ' +
+  'didn\'t won\'t isn\'t let\'s like don wheelchair position change clean wash bath brush teeth hair shave dress clothes shoes warm cool loud quiet ' +
+  'hurry slowly soon news visit visitors money bill appointment hospital room left right side back chest head stomach leg arm hand foot throat mouth ' +
+  'nose eyes ears neck knee shoulder hip sore swollen bleeding vomit nausea fever cough headache itch numb tight heavy weak strong ready done finished').split(' ');
+const LEXRANK = {};
+LEX.forEach((w, i) => { if (!(w in LEXRANK)) LEXRANK[w] = i; });
+
+/* ---------------- State ---------------- */
+const STORE_KEY = 'bolo.v1';
+const DEFAULT_STATE = {
+  lang: 'en', dual: true, g: 'm', rate: 0.95, pitch: 1, voice: { en: '', hi: '' },
+  tile: 'm', speakOnTap: true, hc: false, scanSpeed: 1.5,
+  sos: { name: '', why: '', contact: '', notes: '' },
+  over: {}, hidden: [], custom: {}, recent: [], learned: { w: {}, b: {} }
+};
+let S = load();
+let sentence = [];
+let lastSpoken = '';
+let cat = 'core';
+let mode = 'board';
+let editing = false;
+const pain = { part: null, level: null, kinds: new Set(), time: null };
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return merge(structuredClone(DEFAULT_STATE), JSON.parse(raw));
+  } catch (e) { /* storage unavailable */ }
+  return structuredClone(DEFAULT_STATE);
+}
+function merge(base, add) {
+  for (const k of Object.keys(add || {})) {
+    if (base[k] && typeof base[k] === 'object' && !Array.isArray(base[k]) && add[k] && typeof add[k] === 'object' && !Array.isArray(add[k])) merge(base[k], add[k]);
+    else base[k] = add[k];
+  }
+  return base;
+}
+let storageWarned = false;
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); }
+  catch (e) {
+    if (!storageWarned) { toast('Could not save on this device. Copy a backup from Settings to keep your changes.'); storageWarned = true; }
+  }
+}
+
+/* ---------------- Helpers ---------------- */
+const $ = s => document.querySelector(s);
+const el = (tag, attrs = {}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') n.className = v;
+    else if (k === 'text') n.textContent = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) n.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat()) if (c != null) n.append(c);
+  return n;
+};
+const L = () => S.lang;
+const other = l => (l === 'en' ? 'hi' : 'en');
+function label(t, lang = L()) {
+  if (t.txt) return t.txt;
+  if (lang === 'hi') return (S.g === 'f' && t.hiF) || t.hi || t.en;
+  return t.en || t.hi;
+}
+function tileData(t) { return t.def && S.over[t.id] ? { ...t, ...S.over[t.id] } : t; }
+let toastTimer;
+function toast(msg, ms = 2600) {
+  const t = $('#toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => (t.hidden = true), ms);
+}
+function symbolNode(t, cls = 'sym') {
+  const s = el('span', { class: cls, 'aria-hidden': 'true' });
+  if (t.img) s.append(el('img', { src: t.img, alt: '' })); else s.textContent = t.e || '💬';
+  return s;
+}
+function ui(key) { return UI[key][L() === 'hi' ? 1 : 0]; }
+
+/* ---------------- Speech ---------------- */
+const synth = window.speechSynthesis || null;
+let voices = [];
+function loadVoices() { if (synth) voices = synth.getVoices(); if (!$('#sheetWrap').hidden && sheetKind === 'settings') fillVoiceSelect(); }
+if (synth) { loadVoices(); synth.addEventListener?.('voiceschanged', loadVoices); }
+function voicesFor(lang) {
+  return voices.filter(v => v.lang.toLowerCase().replace('_', '-').startsWith(lang));
+}
+function pickVoice(lang) {
+  const list = voicesFor(lang);
+  if (!list.length) return null;
+  const chosen = list.find(v => v.name === S.voice[lang]);
+  if (chosen) return chosen;
+  return list.find(v => /-in$/i.test(v.lang.replace('_', '-'))) || list.find(v => v.localService) || list[0];
+}
+let noVoiceWarned = { en: false, hi: false };
+function speak(text, lang = L()) {
+  text = (text || '').trim();
+  if (!text) return;
+  lastSpoken = text;
+  if (!synth) { toast('This browser cannot speak aloud. Use Show to display your message.'); return; }
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  const v = pickVoice(lang);
+  if (v) { u.voice = v; u.lang = v.lang; } else {
+    u.lang = lang === 'hi' ? 'hi-IN' : 'en-IN';
+    if (voices.length && !noVoiceWarned[lang]) {
+      noVoiceWarned[lang] = true;
+      toast(lang === 'hi' ? 'No Hindi voice found on this device. See Settings → Voice.' : 'No English voice found on this device.', 4000);
+    }
+  }
+  u.rate = S.rate; u.pitch = S.pitch; u.volume = 1;
+  synth.speak(u);
+}
+
+/* ---------------- Message strip ---------------- */
+function sentenceText(lang = L()) { return sentence.map(t => label(t, lang)).join(' ').replace(/\s+([।.,?!])/g, '$1'); }
+function renderMsg() {
+  const m = $('#msg'); m.replaceChildren();
+  if (!sentence.length) { m.append(el('span', { class: 'ph', text: ui('ph') })); return; }
+  sentence.forEach((t, i) => {
+    const chip = el('button', { class: 'chip' + (L() === 'hi' && !t.txt ? ' hi' : ''), 'aria-label': 'Remove ' + label(t), onclick: () => { sentence.splice(i, 1); renderMsg(); } });
+    if (!t.txt) chip.append(symbolNode(t, 'e'));
+    chip.append(label(t));
+    m.append(chip);
+  });
+  m.scrollTop = m.scrollHeight;
+}
+function addWord(t) {
+  sentence.push({ id: t.id, e: t.e, img: t.img, en: t.en, hi: t.hi, hiF: t.hiF, txt: t.txt });
+  renderMsg();
+}
+function speakSentence() {
+  const text = sentence.length ? sentenceText() : lastSpoken;
+  if (!text) { toast(L() === 'hi' ? 'पहले कुछ शब्द चुनें' : 'Pick some words first'); return; }
+  speak(text);
+  if (sentence.length) {
+    learn(text);
+    const key = JSON.stringify(sentence.map(t => t.txt || t.id));
+    S.recent = [{ toks: structuredClone(sentence), k: key }, ...S.recent.filter(r => r.k !== key)].slice(0, 30);
+    save();
+    if (cat === 'recent') renderGrid();
+  }
+}
+
+/* ---------------- Board ---------------- */
+function tilesFor(c) {
+  if (c === 'recent') return S.recent.map((r, i) => ({ id: 'r' + i, recent: r, phrase: true, t: 's', e: '🕘' }));
+  const base = (DEFAULTS[c] || []).filter(t => !S.hidden.includes(t.id)).map(tileData);
+  return base.concat(S.custom[c] || []);
+}
+function renderCats() {
+  const wrap = $('#cats'); wrap.replaceChildren();
+  for (const c of CATS) {
+    wrap.append(el('button', {
+      class: 'cat', role: 'tab', 'aria-selected': String(c.id === cat), 'data-cat': c.id,
+      onclick: () => { cat = c.id; renderCats(); renderGrid(); $('#gridWrap').scrollTop = 0; }
+    }, el('span', { 'aria-hidden': 'true', text: c.e }), el('span', { class: L() === 'hi' ? 'hi' : '', text: c[L()] })));
+  }
+  wrap.append(el('button', { class: 'cat edit', 'aria-pressed': String(editing), onclick: toggleEdit }, editing ? 'Done editing' : '✏️ Edit'));
+}
+function toggleEdit() { editing = !editing; document.body.classList.toggle('editing', editing); renderCats(); renderGrid(); if (editing) toast('Tap a tile to change it, or add your own.'); }
+function renderGrid() {
+  const g = $('#grid'); g.replaceChildren();
+  const tiles = tilesFor(cat);
+  if (!tiles.length && !editing) {
+    g.append(el('p', { class: 'empty', text: cat === 'recent' ? 'Messages you speak will appear here for one-tap reuse.' : cat === 'mine' ? 'Nothing here yet. Save phrases from Type mode, or tap ✏️ Edit to add tiles.' : 'No tiles here.' }));
+  }
+  for (const t of tiles) g.append(tileNode(t));
+  if (editing && cat !== 'recent') {
+    g.append(el('button', { class: 'tile add' + (cat === 'phrases' || cat === 'mine' ? ' phrase' : ''), onclick: () => openEditor(null) },
+      el('span', { class: 'sym', text: '＋' }), el('span', { class: 'lab', text: 'Add tile' })));
+  }
+}
+function tileNode(t) {
+  const lang = L();
+  if (t.recent) {
+    const txt = t.recent.toks.map(x => label(x, lang)).join(' ');
+    const sub = S.dual ? t.recent.toks.map(x => label(x, other(lang))).join(' ') : '';
+    return el('button', { class: 'tile phrase t-s', onclick: () => { sentence = structuredClone(t.recent.toks); renderMsg(); speak(txt); } },
+      el('span', { class: 'sym', 'aria-hidden': 'true', text: '🕘' }),
+      el('span', { class: 'txt' }, el('span', { class: 'lab' + (lang === 'hi' ? ' hi' : ''), text: txt }), sub && sub !== txt ? el('span', { class: 'sub', text: sub }) : null));
+  }
+  const main = label(t, lang), sub = S.dual ? label(t, other(lang)) : '';
+  const cls = 'tile t-' + (t.t || 'n') + (t.phrase ? ' phrase' : '');
+  const inner = t.phrase
+    ? [symbolNode(t), el('span', { class: 'txt' }, el('span', { class: 'lab' + (lang === 'hi' ? ' hi' : ''), text: main }), sub && sub !== main ? el('span', { class: 'sub' + (lang === 'en' ? ' hi' : ''), text: sub }) : null)]
+    : [symbolNode(t), el('span', { class: 'lab' + (lang === 'hi' ? ' hi' : '') + (main.length > 9 && !main.includes(' ') ? ' long' : ''), text: main }), sub && sub !== main ? el('span', { class: 'sub' + (lang === 'en' ? ' hi' : ''), text: sub }) : null];
+  const b = el('button', { class: cls, 'data-id': t.id }, inner);
+  b.addEventListener('click', () => {
+    if (editing) { openEditor(t); return; }
+    b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash');
+    const say = (t.say && t.say[lang]) || main;
+    if (t.phrase) { speak(say); learn(say); }
+    else { addWord(t); if (S.speakOnTap) speak(say); }
+  });
+  return b;
+}
+
+/* ---------------- Quick answers ---------------- */
+function renderQuick() {
+  document.querySelectorAll('.qb').forEach(b => {
+    const q = QUICK[b.dataset.q];
+    const txt = (q.short || q)[L()];
+    b.replaceChildren(el('span', { 'aria-hidden': 'true', text: q.e }), el('span', { class: L() === 'hi' ? 'hi' : '', text: txt }));
+    b.setAttribute('aria-label', q[L()]);
+  });
+}
+document.querySelectorAll('.qb').forEach(b => b.addEventListener('click', () => speak(QUICK[b.dataset.q][L()])));
+
+/* ---------------- Type mode + prediction ---------------- */
+const tokenize = s => (s.match(/[\p{L}\p{M}\p{N}']+/gu) || []);
+const norm = w => w.toLowerCase();
+function learn(text) {
+  const toks = tokenize(text).map(norm);
+  toks.forEach((w, i) => {
+    S.learned.w[w] = (S.learned.w[w] || 0) + 1;
+    if (i > 0) { const k = toks[i - 1]; (S.learned.b[k] ||= {})[w] = (S.learned.b[k][w] || 0) + 1; }
+  });
+  // keep the learned model small
+  const words = Object.keys(S.learned.w);
+  if (words.length > 3000) words.sort((a, b) => S.learned.w[a] - S.learned.w[b]).slice(0, 1000).forEach(w => { delete S.learned.w[w]; delete S.learned.b[w]; });
+  save();
+}
+function predictions(text) {
+  const endsInSpace = /[\s]$/.test(text) || text === '';
+  const toks = tokenize(text).map(norm);
+  const partial = endsInSpace ? '' : (toks[toks.length - 1] || '');
+  const prev = endsInSpace ? toks[toks.length - 1] : toks[toks.length - 2];
+  const score = {};
+  const add = (w, s) => { score[w] = (score[w] || 0) + s; };
+  if (prev && S.learned.b[prev]) for (const [w, c] of Object.entries(S.learned.b[prev])) if (w.startsWith(partial)) add(w, 50 + c * 20);
+  for (const [w, c] of Object.entries(S.learned.w)) if (w.startsWith(partial) && w !== partial) add(w, c * 6);
+  if (partial || !prev) for (const w of LEX) if (w.startsWith(partial) && w !== partial) add(w, Math.max(1, 30 - LEXRANK[w] / 12));
+  delete score[partial];
+  return { partial, list: Object.entries(score).sort((a, b) => b[1] - a[1]).slice(0, 6).map(e => e[0]) };
+}
+function renderPreds() {
+  const box = $('#typeBox'); const { partial, list } = predictions(box.value);
+  const p = $('#preds'); p.replaceChildren();
+  for (const w of list) {
+    const shown = w === 'i' ? 'I' : w.replace(/^i'/, "I'");
+    p.append(el('button', { class: 'pred', onclick: () => {
+      const v = box.value;
+      box.value = (partial ? v.slice(0, v.length - partial.length) : v) + shown + ' ';
+      box.focus(); renderPreds();
+    } }, shown));
+  }
+}
+$('#typeBox').addEventListener('input', renderPreds);
+$('#typeSpeak').addEventListener('click', () => { const v = $('#typeBox').value.trim(); if (!v) return toast('Type something first'); speak(v, /[ऀ-ॿ]/.test(v) ? 'hi' : L()); learn(v); });
+$('#typeAdd').addEventListener('click', () => { const v = $('#typeBox').value.trim(); if (!v) return; addWord({ id: 'txt', txt: v, e: '' }); learn(v); $('#typeBox').value = ''; renderPreds(); toast('Added to message'); });
+$('#typeClear').addEventListener('click', () => { $('#typeBox').value = ''; renderPreds(); });
+$('#typeSave').addEventListener('click', () => {
+  const v = $('#typeBox').value.trim(); if (!v) return toast('Type something first');
+  const isHi = /[ऀ-ॿ]/.test(v);
+  (S.custom.mine ||= []).push({ id: 'c' + Date.now(), e: '📝', en: isHi ? '' : v, hi: isHi ? v : '', t: 's', phrase: true });
+  save(); renderSaved(); toast('Saved to My phrases');
+});
+function renderSaved() {
+  const w = $('#savedList'); w.replaceChildren();
+  const list = S.custom.mine || [];
+  if (!list.length) w.append(el('p', { class: 'empty', text: 'Phrases you save appear here and on the board under My phrases.' }));
+  for (const t of list) w.append(tileNode(t));
+}
+
+/* ---------------- Pain mode ---------------- */
+function renderPain() {
+  const lang = L();
+  const mk = (arr, key, multi) => arr.map(([id, e, en, hi]) => el('button', {
+    class: 'opt', 'aria-pressed': String(multi ? pain.kinds.has(id) : pain[key] === id),
+    onclick: () => { if (multi) { pain.kinds.has(id) ? pain.kinds.delete(id) : pain.kinds.add(id); } else { pain[key] = pain[key] === id ? null : id; } renderPain(); }
+  }, el('span', { class: 'e', 'aria-hidden': 'true', text: e }), el('span', { class: lang === 'hi' ? 'hi' : '', text: lang === 'hi' ? hi : en }), S.dual ? el('small', { class: lang === 'en' ? 'hi' : '', text: lang === 'hi' ? en : hi }) : null));
+  $('#painParts').replaceChildren(...mk(PAIN_PARTS, 'part'));
+  $('#painKinds').replaceChildren(...mk(PAIN_KINDS, 'kinds', true));
+  $('#painTime').replaceChildren(...PAIN_TIME.map(([id, e, en, hi, short]) => el('button', {
+    class: 'opt', 'aria-pressed': String(pain.time === id), onclick: () => { pain.time = pain.time === id ? null : id; renderPain(); }
+  }, el('span', { class: 'e', 'aria-hidden': 'true', text: e }), el('span', { class: lang === 'hi' ? 'hi' : '', text: lang === 'hi' ? hi.replace('यह ', '').replace('।', '') : short }))));
+  $('#painScale').replaceChildren(...PAIN_COL.map((c, n) => el('button', {
+    class: 'lvl', style: 'background:' + c, 'aria-pressed': String(pain.level === n), 'aria-label': 'Pain level ' + n,
+    onclick: () => { pain.level = pain.level === n ? null : n; renderPain(); }
+  }, String(n))));
+  $('#painOut').textContent = painSentence() || (lang === 'hi' ? 'ऊपर से चुनें। वाक्य यहाँ बनेगा।' : 'Choose above. Your sentence builds here.');
+  $('#painOut').className = 'pain-out' + (lang === 'hi' ? ' hi' : '');
+}
+function painSentence(lang = L()) {
+  const part = PAIN_PARTS.find(p => p[0] === pain.part);
+  const kinds = PAIN_KINDS.filter(k => pain.kinds.has(k[0]));
+  const time = PAIN_TIME.find(t => t[0] === pain.time);
+  if (!part && pain.level == null && !kinds.length && !time) return '';
+  const out = [];
+  if (lang === 'hi') {
+    out.push(part ? part[4] + ' दर्द है।' : 'मुझे दर्द हो रहा है।');
+    if (pain.level != null) out.push(`दर्द 10 में से ${pain.level} है, ${PAIN_WORD(pain.level)[1]}।`);
+    if (kinds.length) out.push(kinds.map(k => k[3]).join(', ') + ' है।');
+    if (time) out.push(time[3]);
+  } else {
+    out.push(part ? (part[0] === 'all' ? 'I hurt everywhere.' : `I have pain in my ${part[2]}.`) : 'I am in pain.');
+    if (pain.level != null) out.push(`It is ${pain.level} out of 10, ${PAIN_WORD(pain.level)[0]}.`);
+    if (kinds.length) out.push('It feels ' + joinEn(kinds.map(k => k[2])) + '.');
+    if (time) out.push(time[2]);
+  }
+  return out.join(' ');
+}
+function joinEn(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
+$('#painSpeak').addEventListener('click', () => { const s = painSentence(); if (!s) return toast('Choose where it hurts first'); speak(s); });
+$('#painShowBtn').addEventListener('click', () => { const s = painSentence(); if (!s) return toast('Choose where it hurts first'); lastSpoken = s; openShow(s); });
+$('#painReset').addEventListener('click', () => { pain.part = null; pain.level = null; pain.kinds.clear(); pain.time = null; renderPain(); });
+
+/* ---------------- Modes / language ---------------- */
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.modes button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === m)));
+  for (const v of ['board', 'type', 'pain']) $('#view-' + v).hidden = v !== m;
+  if (m === 'type') { renderPreds(); renderSaved(); }
+  if (m === 'pain') renderPain();
+}
+document.querySelectorAll('.modes button').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+function setLang(l) {
+  S.lang = l; save();
+  $('#lang-en').setAttribute('aria-pressed', String(l === 'en'));
+  $('#lang-hi').setAttribute('aria-pressed', String(l === 'hi'));
+  document.documentElement.lang = l;
+  document.querySelectorAll('[data-ui]').forEach(n => { n.textContent = ui(n.dataset.ui); n.classList.toggle('hi', l === 'hi'); });
+  renderAll();
+}
+$('#lang-en').addEventListener('click', () => setLang('en'));
+$('#lang-hi').addEventListener('click', () => setLang('hi'));
+function applyLook() {
+  document.documentElement.style.setProperty('--tile', { s: '78px', m: '98px', l: '128px', xl: '164px' }[S.tile] || '98px');
+  document.body.classList.toggle('hc', !!S.hc);
+}
+function renderAll() { applyLook(); renderMsg(); renderQuick(); renderCats(); renderGrid(); if (mode === 'pain') renderPain(); if (mode === 'type') renderSaved(); }
+
+/* ---------------- Strip actions ---------------- */
+$('#btnSpeak').addEventListener('click', speakSentence);
+$('#btnBack').addEventListener('click', () => { sentence.pop(); renderMsg(); });
+let backHold;
+$('#btnBack').addEventListener('pointerdown', () => { backHold = setTimeout(() => { sentence = []; renderMsg(); toast('Message cleared'); }, 700); });
+['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => $('#btnBack').addEventListener(ev, () => clearTimeout(backHold)));
+$('#btnShow').addEventListener('click', () => { const t = sentence.length ? sentenceText() : lastSpoken; if (!t) return toast('Nothing to show yet'); openShow(t); });
+
+/* ---------------- Show overlay ---------------- */
+function openShow(text) {
+  const o = $('#show'), t = $('#showText');
+  t.textContent = text; t.classList.toggle('hi', /[ऀ-ॿ]/.test(text));
+  o.hidden = false; fitText(t);
+  $('#showClose').focus();
+}
+function fitText(t) {
+  let lo = 16, hi = 220;
+  while (lo < hi - 1) {
+    const mid = (lo + hi) >> 1; t.style.fontSize = mid + 'px';
+    if (t.scrollHeight <= t.clientHeight && t.scrollWidth <= t.clientWidth) lo = mid; else hi = mid;
+  }
+  t.style.fontSize = lo + 'px';
+}
+$('#showClose').addEventListener('click', () => { $('#show').hidden = true; $('#showText').classList.remove('flip'); });
+$('#showFlip').addEventListener('click', () => $('#showText').classList.toggle('flip'));
+$('#showSpeak').addEventListener('click', () => speak($('#showText').textContent, /[ऀ-ॿ]/.test($('#showText').textContent) ? 'hi' : 'en'));
+window.addEventListener('resize', () => { if (!$('#show').hidden) fitText($('#showText')); });
+
+/* ---------------- Emergency ---------------- */
+function sosLines() {
+  const s = S.sos, en = [], hi = [];
+  if (s.name) { en.push(`My name is ${s.name}.`); hi.push(`मेरा नाम ${s.name} है।`); }
+  if (s.why) en.push(s.why);
+  return { en: ['I need help now.', ...en].join(' '), hi: ['मुझे अभी मदद चाहिए।', ...hi].join(' ') };
+}
+let sosLoop = null;
+function sosSpeak() {
+  const { en, hi } = sosLines();
+  if (!synth) return;
+  synth.cancel();
+  const say = (text, lang) => { const u = new SpeechSynthesisUtterance(text); const v = pickVoice(lang); if (v) { u.voice = v; u.lang = v.lang; } else u.lang = lang === 'hi' ? 'hi-IN' : 'en-IN'; u.rate = 0.9; u.volume = 1; synth.speak(u); };
+  if (L() === 'hi') { say(hi, 'hi'); say(en, 'en'); } else { say(en, 'en'); say(hi, 'hi'); }
+}
+function openSos() {
+  const s = S.sos, info = $('#sosInfo'); info.replaceChildren();
+  if (s.name) info.append(el('div', { text: 'Name: ' + s.name }));
+  if (s.why) info.append(el('div', { text: s.why }));
+  if (s.notes) info.append(el('div', { text: s.notes }));
+  if (s.contact) info.append(el('div', { text: 'Please call:' }), el('div', { class: 'num', text: s.contact }));
+  if (!s.name && !s.why && !s.contact) info.append(el('div', { text: 'Add a name, medical details and an emergency number in Settings so they show here.' }));
+  $('#sos').hidden = false;
+  sosSpeak();
+  $('#sosClose').focus();
+}
+$('#btnSos').addEventListener('click', openSos);
+$('#sosSpeak').addEventListener('click', sosSpeak);
+$('#sosClose').addEventListener('click', () => { $('#sos').hidden = true; synth && synth.cancel(); });
+
+/* ---------------- Sheets (settings, editor, about) ---------------- */
+let sheetKind = null;
+function openSheet(kind, build) {
+  sheetKind = kind;
+  const sh = $('#sheet'); sh.replaceChildren(); build(sh);
+  $('#sheetWrap').hidden = false;
+  sh.scrollTop = 0;
+  (sh.querySelector('input,select,textarea,button') || sh).focus();
+}
+function closeSheet() { $('#sheetWrap').hidden = true; sheetKind = null; }
+$('#sheetWrap').addEventListener('click', e => { if (e.target.id === 'sheetWrap') closeSheet(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (!$('#sheetWrap').hidden) closeSheet();
+    else if (!$('#show').hidden) $('#showClose').click();
+    else if (!$('#sos').hidden) $('#sosClose').click();
+  }
+});
+const field = (id, lab, input, hint) => el('div', { class: 'field' }, el('label', { for: id, text: lab }), input, hint ? el('span', { class: 'hint', text: hint }) : null);
+const checkbox = (id, lab, checked, on) => el('label', { class: 'check', for: id }, el('input', { type: 'checkbox', id, checked: !!checked, onchange: e => on(e.target.checked) }), lab);
+const selectEl = (id, opts, val, on) => { const s = el('select', { id, onchange: e => on(e.target.value) }); for (const [v, t] of opts) s.append(el('option', { value: v, selected: v === val, text: t })); return s; };
+
+function fillVoiceSelect() {
+  for (const lang of ['en', 'hi']) {
+    const s = document.getElementById('set-voice-' + lang); if (!s) continue;
+    const list = voicesFor(lang);
+    s.replaceChildren(el('option', { value: '', text: list.length ? 'Automatic' : 'No voice installed' }));
+    for (const v of list) s.append(el('option', { value: v.name, selected: v.name === S.voice[lang], text: `${v.name} (${v.lang})` }));
+  }
+  const n = document.getElementById('hiVoiceNote');
+  if (n) n.hidden = !!voicesFor('hi').length || !voices.length;
+}
+
+function openSettings() {
+  openSheet('settings', sh => {
+    sh.append(el('h3', { text: 'Settings' }));
+    const voice = el('div', { class: 'sec' },
+      el('h2', { text: 'Voice' }),
+      el('div', { class: 'two' },
+        field('set-voice-en', 'English voice', selectEl('set-voice-en', [], S.voice.en, v => { S.voice.en = v; save(); speak('Hello, this is my voice.', 'en'); })),
+        field('set-voice-hi', 'Hindi voice', selectEl('set-voice-hi', [], S.voice.hi, v => { S.voice.hi = v; save(); speak('नमस्ते, यह मेरी आवाज़ है।', 'hi'); }))),
+      el('p', { class: 'notice', id: 'hiVoiceNote', hidden: true, text: 'This device has no Hindi voice yet. On Android, open Settings → Text-to-speech → Google speech engine → Install voice data → Hindi. On iPhone, open Settings → Accessibility → Spoken Content → Voices → Hindi.' }),
+      el('div', { class: 'two' },
+        field('set-rate', 'Speed', el('input', { type: 'range', id: 'set-rate', min: '0.5', max: '1.5', step: '0.05', value: S.rate, onchange: e => { S.rate = +e.target.value; save(); speak(L() === 'hi' ? 'यह गति कैसी है?' : 'How is this speed?'); } })),
+        field('set-pitch', 'Pitch', el('input', { type: 'range', id: 'set-pitch', min: '0.5', max: '1.6', step: '0.05', value: S.pitch, onchange: e => { S.pitch = +e.target.value; save(); speak(L() === 'hi' ? 'यह आवाज़ कैसी है?' : 'How does this sound?'); } }))),
+      field('set-g', 'Hindi sentences speak as', selectEl('set-g', [['m', 'Male (मैं थक गया हूँ)'], ['f', 'Female (मैं थक गई हूँ)']], S.g, v => { S.g = v; save(); renderAll(); }), 'Hindi verbs change with the speaker’s gender, so phrases like “I am tired” are spoken correctly.'),
+      checkbox('set-tap', 'Speak each word when tapped', S.speakOnTap, v => { S.speakOnTap = v; save(); })
+    );
+    const look = el('div', { class: 'sec' },
+      el('h2', { text: 'Display' }),
+      field('set-tile', 'Tile size', selectEl('set-tile', [['s', 'Small – more words'], ['m', 'Medium'], ['l', 'Large'], ['xl', 'Extra large – easier to hit']], S.tile, v => { S.tile = v; save(); applyLook(); })),
+      checkbox('set-dual', 'Show the other language under each word', S.dual, v => { S.dual = v; save(); renderAll(); }),
+      checkbox('set-hc', 'High-contrast tile borders', S.hc, v => { S.hc = v; save(); applyLook(); })
+    );
+    const access = el('div', { class: 'sec' },
+      el('h2', { text: 'Switch scanning' }),
+      el('p', { text: 'For people who cannot tap precisely. Bolo highlights one row at a time, then one tile at a time. Press a switch, the space bar, or tap anywhere on the screen to choose. A Bluetooth switch that acts as a keyboard works too.' }),
+      field('set-scan', 'Scan speed', selectEl('set-scan', [['0.8', 'Fast (0.8 s)'], ['1.2', '1.2 s'], ['1.5', 'Medium (1.5 s)'], ['2', '2 s'], ['3', 'Slow (3 s)']], String(S.scanSpeed), v => { S.scanSpeed = +v; save(); })),
+      el('button', { class: 'btn primary', onclick: () => { closeSheet(); startScan(); } }, 'Start scanning')
+    );
+    const sosInput = (k, lab, ph, type = 'text') => field('sos-' + k, lab, el('input', { type, id: 'sos-' + k, value: S.sos[k], placeholder: ph, oninput: e => { S.sos[k] = e.target.value.trim(); save(); } }));
+    const sos = el('div', { class: 'sec' },
+      el('h2', { text: 'Emergency screen' }),
+      el('p', { text: 'Shown in large text when the red Help button is pressed. Bolo does not call anyone; it shows this to the people nearby.' }),
+      el('div', { class: 'two' }, sosInput('name', 'Name', 'e.g. Ravi Kumar'), sosInput('contact', 'Emergency phone number', 'e.g. 98xxxxxx10', 'tel')),
+      sosInput('why', 'Why I cannot speak', 'e.g. I have ALS. I can hear and understand you.'),
+      sosInput('notes', 'Medical notes', 'e.g. Diabetic. Allergic to penicillin.')
+    );
+    const data = el('div', { class: 'sec' },
+      el('h2', { text: 'Your board' }),
+      el('p', { text: 'Your words, photos and settings stay on this device only. Copy a backup to move them to another phone or keep them safe.' }),
+      el('div', { class: 'row' },
+        el('button', { class: 'btn', onclick: copyBackup }, 'Copy backup'),
+        el('button', { class: 'btn', onclick: openRestore }, 'Restore backup'),
+        el('button', { class: 'btn', onclick: () => { S.hidden = []; save(); renderGrid(); toast('Hidden tiles are back'); } }, 'Show hidden tiles'),
+        el('button', { class: 'btn', onclick: () => { S.learned = { w: {}, b: {} }; S.recent = []; save(); renderAll(); toast('Suggestions and recent messages cleared'); } }, 'Clear history'))
+    );
+    sh.append(voice, look, access, sos, data, el('div', { class: 'row' }, el('button', { class: 'btn primary', onclick: closeSheet }, 'Done')));
+    fillVoiceSelect();
+  });
+}
+$('#btnSettings').addEventListener('click', openSettings);
+
+function copyBackup() {
+  const data = JSON.stringify({ app: 'bolo', v: 1, state: S });
+  const done = () => toast('Backup copied. Paste it into a note or message to keep it.', 3500);
+  const fallback = () => {
+    openSheet('backup', sh => {
+      const ta = el('textarea', { id: 'backupText', rows: '8', readonly: true, style: 'width:100%;font-size:12px' }); ta.value = data;
+      sh.append(el('h3', { text: 'Backup' }), el('p', { text: 'Select all of this text and copy it somewhere safe.' }), ta, el('div', { class: 'row' }, el('button', { class: 'btn primary', onclick: closeSheet }, 'Done')));
+      ta.focus(); ta.select();
+    });
+  };
+  try { navigator.clipboard.writeText(data).then(done, fallback); } catch (e) { fallback(); }
+}
+function openRestore() {
+  openSheet('restore', sh => {
+    const ta = el('textarea', { id: 'restoreText', rows: '6', placeholder: 'Paste your backup here', style: 'width:100%' });
+    const file = el('input', { type: 'file', id: 'restoreFile', accept: '.json,.txt,application/json,text/plain', onchange: e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => (ta.value = r.result); r.readAsText(f); } });
+    const msg = el('p', { class: 'notice', hidden: true });
+    sh.append(el('h3', { text: 'Restore backup' }), el('p', { text: 'This replaces the words, photos and settings on this device.' }),
+      field('restoreText', 'Backup text', ta), field('restoreFile', 'Or choose a backup file', file), msg,
+      el('div', { class: 'row' },
+        el('button', { class: 'btn primary', onclick: () => {
+          try {
+            const d = JSON.parse(ta.value.trim());
+            if (!d || d.app !== 'bolo' || !d.state) throw new Error();
+            S = merge(structuredClone(DEFAULT_STATE), d.state); save(); closeSheet(); setLang(S.lang); toast('Backup restored');
+          } catch (e) { msg.hidden = false; msg.textContent = 'That text is not a Bolo backup. Copy the whole backup, starting with {"app":"bolo".'; }
+        } }, 'Restore'),
+        el('button', { class: 'btn', onclick: closeSheet }, 'Cancel')));
+  });
+}
+
+/* Tile editor */
+async function readPhoto(file) {
+  const url = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); });
+  const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+  const s = 192, c = document.createElement('canvas'); c.width = c.height = s;
+  const m = Math.min(img.width, img.height);
+  c.getContext('2d').drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, s, s);
+  return c.toDataURL('image/jpeg', 0.8);
+}
+function openEditor(tile) {
+  const isNew = !tile;
+  const t = tile ? { ...tile } : { e: '⭐', en: '', hi: '', t: cat === 'phrases' || cat === 'mine' ? 's' : 'n', phrase: cat === 'phrases' || cat === 'mine' };
+  let img = t.img || '';
+  openSheet('editor', sh => {
+    const preview = el('div', { class: 'grid', style: '--tile:110px;max-width:260px' });
+    const draw = () => { preview.replaceChildren(tileNode({ ...t, img, id: 'preview' })); preview.firstChild.disabled = true; };
+    const inp = (k, lab, ph, hint) => field('ed-' + k, lab, el('input', { type: 'text', id: 'ed-' + k, value: t[k] || '', placeholder: ph, class: k.startsWith('hi') ? 'hi' : '', oninput: e => { t[k] = e.target.value; draw(); } }), hint);
+    sh.append(el('h3', { text: isNew ? 'Add a tile' : 'Edit tile' }), preview,
+      el('div', { class: 'two' }, inp('en', 'English word or phrase', 'e.g. Grandma Asha'), inp('hi', 'Hindi word or phrase', 'e.g. आशा दादी')),
+      el('div', { class: 'two' },
+        inp('e', 'Symbol (emoji)', '⭐', 'Or use a photo below.'),
+        field('ed-type', 'Colour group', selectEl('ed-type', Object.entries(TYPES).map(([k, v]) => [k, `${v.en} – ${v.c}`]), t.t, v => { t.t = v; draw(); }))),
+      field('ed-photo', 'Photo (a real person, food or place works best)', el('input', { type: 'file', id: 'ed-photo', accept: 'image/*', onchange: async e => { const f = e.target.files[0]; if (!f) return; try { img = await readPhoto(f); draw(); } catch (err) { toast('That image could not be read. Try a JPG or PNG.'); } } })),
+      img ? el('button', { class: 'btn small', onclick: e => { img = ''; e.target.remove(); draw(); } }, 'Remove photo') : null,
+      checkbox('ed-phrase', 'Speak as a whole sentence (wide tile)', t.phrase, v => { t.phrase = v; draw(); }),
+      el('div', { class: 'row' },
+        el('button', { class: 'btn primary', onclick: () => {
+          if (!t.en.trim() && !t.hi.trim()) { toast('Add a word in English or Hindi'); return; }
+          const rec = { e: t.e, en: t.en.trim(), hi: t.hi.trim(), hiF: t.hiF || '', t: t.t, phrase: !!t.phrase, img };
+          if (tile && tile.def) { S.over[tile.id] = { ...rec, hiF: rec.hi === BYID[tile.id].hi ? BYID[tile.id].hiF : '' }; }
+          else if (tile) { const list = S.custom[cat] || []; const i = list.findIndex(x => x.id === tile.id); if (i > -1) list[i] = { ...list[i], ...rec }; }
+          else { (S.custom[cat] ||= []).push({ id: 'c' + Date.now(), ...rec }); }
+          save(); closeSheet(); renderGrid(); toast('Saved');
+        } }, 'Save'),
+        tile && tile.def ? el('button', { class: 'btn', onclick: () => { S.hidden.push(tile.id); save(); closeSheet(); renderGrid(); toast('Tile hidden. Settings → Show hidden tiles brings it back.'); } }, 'Hide tile') : null,
+        tile && tile.def && S.over[tile.id] ? el('button', { class: 'btn', onclick: () => { delete S.over[tile.id]; save(); closeSheet(); renderGrid(); } }, 'Reset to original') : null,
+        tile && !tile.def ? el('button', { class: 'btn danger', onclick: () => { S.custom[cat] = (S.custom[cat] || []).filter(x => x.id !== tile.id); save(); closeSheet(); renderGrid(); if (mode === 'type') renderSaved(); toast('Tile deleted'); } }, 'Delete tile') : null,
+        el('button', { class: 'btn', onclick: closeSheet }, 'Cancel')));
+    draw();
+  });
+}
+
+/* About */
+function openAbout() {
+  openSheet('about', sh => {
+    sh.append(el('h3', { text: 'About Bolo' }),
+      el('p', { text: 'Bolo (“speak” in Hindi) is a free talking board for people who cannot rely on speech: autistic children and adults, people after a stroke, people living with ALS, cerebral palsy or Parkinson’s, and patients on a ventilator or recovering from surgery. Tap pictures or type, and the phone speaks for you in English or Hindi.' }),
+      el('div', { class: 'sec' }, el('h2', { text: 'How to use it' }),
+        el('p', { text: '1. Tap tiles to build a message, then press Speak. 2. Yes, No, Don’t know and Wait speak instantly. 3. Pain mode builds a full description for doctors and nurses. 4. Show puts the message in huge text; Flip turns it to face the person opposite you. 5. Hold the delete key to clear the whole message. 6. Build a sentence in English, switch to Hindi, and the same message speaks in Hindi.' })),
+      el('div', { class: 'sec' }, el('h2', { text: 'Colour key' }),
+        el('p', { text: 'Tiles use the Modified Fitzgerald Key, the colour system speech therapists use on communication boards, so skills carry over between boards.' }),
+        el('div', { class: 'key' }, ...Object.entries(TYPES).map(([k, v]) => el('span', { class: 't-' + k, text: v.en })))),
+      el('div', { class: 'sec' }, el('h2', { text: 'Privacy' }),
+        el('p', { text: 'No account, no ads, no tracking. Everything you add stays on this device. Speech uses the voices built into your phone.' })),
+      el('div', { class: 'sec' }, el('h2', { text: 'Good to know' }),
+        el('p', { text: 'Bolo is a communication aid, not a medical device. In an emergency, it shows your details to people nearby but cannot call anyone. A speech-language therapist can help choose and teach the right vocabulary.' })),
+      el('div', { class: 'row' }, el('button', { class: 'btn primary', onclick: closeSheet }, 'Close')));
+  });
+}
+$('#btnAbout').addEventListener('click', openAbout);
+
+/* ---------------- Switch scanning ---------------- */
+const scan = { on: false, level: 0, groups: [], gi: -1, ii: -1, timer: null, loops: 0 };
+function visible(n) { const r = n.getBoundingClientRect(); return r.width > 0 && r.height > 0 && !n.closest('[hidden]'); }
+function buildGroups() {
+  const g = [];
+  g.push([$('#btnSos'), ...document.querySelectorAll('.qb')]);
+  g.push([...document.querySelectorAll('.strip-actions button')]);
+  g.push([...document.querySelectorAll('.modes button')]);
+  const view = $('#view-' + mode);
+  if (mode === 'board') {
+    g.push([...document.querySelectorAll('#cats .cat:not(.edit)')]);
+    const rows = new Map();
+    document.querySelectorAll('#grid .tile').forEach(t => { const k = t.offsetTop; if (!rows.has(k)) rows.set(k, []); rows.get(k).push(t); });
+    for (const r of rows.values()) g.push(r);
+  } else {
+    const rows = new Map();
+    view.querySelectorAll('button').forEach(t => { if (!visible(t)) return; const k = Math.round(t.getBoundingClientRect().top + view.querySelector('.scroll').scrollTop); if (!rows.has(k)) rows.set(k, []); rows.get(k).push(t); });
+    [...rows.entries()].sort((a, b) => a[0] - b[0]).forEach(([, r]) => g.push(r));
+  }
+  return g.filter(x => x.length);
+}
+function clearHi() { document.querySelectorAll('.scan-g,.scan-i').forEach(n => n.classList.remove('scan-g', 'scan-i')); }
+function scanTick() {
+  clearHi();
+  if (scan.level === 0) {
+    scan.gi = (scan.gi + 1) % scan.groups.length;
+    const grp = scan.groups[scan.gi];
+    grp.forEach(n => n.classList.add('scan-g'));
+    grp[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  } else {
+    const grp = scan.groups[scan.gi];
+    scan.ii++;
+    if (scan.ii >= grp.length) { scan.ii = 0; scan.loops++; if (scan.loops >= 2) { scan.level = 0; scan.gi--; return scanTick(); } }
+    grp[scan.ii].classList.add('scan-i');
+    grp[scan.ii].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+function restartTimer() { clearInterval(scan.timer); scan.timer = setInterval(scanTick, S.scanSpeed * 1000); }
+function scanSelect() {
+  if (!$('#show').hidden) { $('#showClose').click(); return; }
+  if (!$('#sos').hidden) { $('#sosClose').click(); return; }
+  if (scan.gi < 0) return;
+  if (scan.level === 0) {
+    const grp = scan.groups[scan.gi];
+    if (grp.length === 1) { activate(grp[0]); return; }
+    scan.level = 1; scan.ii = -1; scan.loops = 0; scanTick(); restartTimer();
+  } else {
+    const item = scan.groups[scan.gi][scan.ii];
+    activate(item);
+  }
+}
+function activate(n) {
+  clearHi(); n.click();
+  scan.level = 0; scan.gi = -1;
+  setTimeout(() => { scan.groups = buildGroups(); scanTick(); restartTimer(); }, 150);
+}
+function startScan() {
+  scan.on = true; scan.level = 0; scan.gi = -1; scan.groups = buildGroups();
+  $('#catcher').hidden = false; scanTick(); restartTimer();
+  toast('Scanning. Tap anywhere or press space to choose.', 3500);
+}
+function stopScan() { scan.on = false; clearInterval(scan.timer); clearHi(); $('#catcher').hidden = true; toast('Scanning stopped'); }
+$('#catcher').addEventListener('pointerdown', e => { if (e.target.closest('#scanStop')) return; e.preventDefault(); scanSelect(); });
+let stopHold;
+const stopBtn = $('#scanStop');
+stopBtn.addEventListener('pointerdown', e => { e.stopPropagation(); stopBtn.classList.add('holding'); stopHold = setTimeout(stopScan, 2000); });
+['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => stopBtn.addEventListener(ev, () => { stopBtn.classList.remove('holding'); clearTimeout(stopHold); }));
+document.addEventListener('keydown', e => {
+  if (!scan.on) return;
+  if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (!e.repeat) scanSelect(); }
+});
+
+/* ---------------- Start ---------------- */
+const hash = location.hash.replace('#', '');
+setLang(S.lang);
+if (['type', 'pain'].includes(hash)) setMode(hash);
+// Opening example so the first screen shows what Bolo does; cleared by the first tap on delete.
+if (!S.recent.length) { sentence = [BYID.i, BYID.want, BYID.water, BYID.please].map(t => ({ ...t })); renderMsg(); }
+})();
+</script>
+
+</body></html>
