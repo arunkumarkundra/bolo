@@ -1,5 +1,47 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Bolo Talk Board</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bolo – Free Talking Board in English &amp; Hindi</title>
+<meta name="description" content="Bolo is a free talking board for people who cannot speak. Tap picture tiles or type, and your phone speaks for you in English or Hindi. No sign-up.">
+<meta name="application-name" content="Bolo">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#E9EDF1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E141C" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://bolo.pi3.in/">
+
+<!-- App icons and install -->
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bolo">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<!-- Link previews (WhatsApp, Facebook, LinkedIn, X/Twitter) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bolo">
+<meta property="og:title" content="Bolo – Tap. Speak. Be heard.">
+<meta property="og:description" content="A free talking board for people who cannot speak. Tap pictures or type, and your phone speaks in English or Hindi.">
+<meta property="og:url" content="https://bolo.pi3.in/">
+<meta property="og:image" content="https://bolo.pi3.in/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bolo logo next to the Bolo talking board on a phone">
+<meta property="og:locale" content="en_IN">
+<meta property="og:locale:alternate" content="hi_IN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bolo – Tap. Speak. Be heard.">
+<meta name="twitter:description" content="A free talking board for people who cannot speak. Tap pictures or type, and your phone speaks in English or Hindi.">
+<meta name="twitter:image" content="https://bolo.pi3.in/og-image.png">
+<meta name="twitter:image:alt" content="Bolo logo next to the Bolo talking board on a phone">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Bolo","alternateName":"बोलो","url":"https://bolo.pi3.in/","description":"A free talking board (AAC app) for people who cannot speak. Tap picture tiles or type, and the phone speaks in English or Hindi.","applicationCategory":"HealthApplication","operatingSystem":"Any","browserRequirements":"Requires a modern web browser","inLanguage":["en","hi"],"isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"image":"https://bolo.pi3.in/og-image.png"}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap">
@@ -50,19 +92,23 @@
 .hc {
   --line: var(--ink);
 }
-html { height: 100%; box-sizing: border-box; }
+html { height: 100%; box-sizing: border-box; overscroll-behavior: none; }
 *, *::before, *::after { box-sizing: border-box; }
-body { height: 100%; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.4; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+body { margin: 0; height: 100%; overscroll-behavior: none; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.4; -webkit-tap-highlight-color: transparent; }
 button, input, select, textarea { font: inherit; color: inherit; }
-button { cursor: pointer; }
+button { cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .hi, [lang="hi"] { font-family: var(--font-hi); }
 
-#app { height: 100%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; padding-inline: 12px; padding-block: 8px 10px; gap: 8px; }
+#app { height: 100%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px;
+  padding: max(8px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) max(10px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)); }
 
 /* Top bar */
 .top { display: flex; align-items: center; gap: 8px; }
-.brand { display: flex; align-items: baseline; gap: 6px; margin-right: auto; min-width: 0; }
+.brand { display: flex; align-items: center; gap: 7px; margin-right: auto; min-width: 0; }
+.brand img { width: 32px; height: 32px; flex-shrink: 0; }
 .brand b { font-size: 1.35rem; letter-spacing: -0.01em; }
 .brand span { font-family: var(--font-hi); color: var(--muted); font-size: 1.05rem; }
 .seg { display: inline-flex; border: 1.5px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
@@ -103,7 +149,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .cat { flex-shrink: 0; border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 13px; min-height: 40px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
 .cat[aria-selected="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
 .cat.edit[aria-pressed="true"] { background: var(--focus); color: #1A1300; border-color: var(--focus); }
-.grid-wrap { flex: 1; min-height: 0; overflow-y: auto; border-radius: var(--r); }
+.grid-wrap { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; border-radius: var(--r); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--tile), 1fr)); gap: 8px; padding-bottom: 12px; }
 
 /* Tiles */
@@ -137,7 +183,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
 /* Type view */
 .panel { background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--r); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-.scroll { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-bottom: 12px; }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 10px; padding-bottom: 12px; }
 #typeBox { width: 100%; min-height: 110px; resize: vertical; border: 1.5px solid var(--line); border-radius: 12px; padding: 12px; font-size: 1.35rem; background: var(--surface-2); line-height: 1.35; }
 .preds { display: flex; gap: 6px; flex-wrap: wrap; min-height: 46px; }
 .pred { border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 8px 14px; font-size: 1.1rem; font-weight: 700; min-height: 44px; }
@@ -145,6 +191,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .btn { border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 10px 16px; font-weight: 700; min-height: 46px; }
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .btn.danger { background: var(--danger); color: var(--danger-ink); border-color: var(--danger); }
+a.btn { color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; }
 .btn.small { min-height: 36px; padding: 6px 12px; font-size: 0.95rem; }
 h2 { font-size: 1rem; margin: 0; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 .saved { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
@@ -163,8 +210,8 @@ h2 { font-size: 1rem; margin: 0; letter-spacing: 0.06em; text-transform: upperca
 
 /* Overlays */
 .overlay { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; }
-.sheet-bg { background: color-mix(in srgb, var(--ink) 45%, transparent); align-items: center; justify-content: flex-end; padding: 12px; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
-.sheet { background: var(--surface); color: var(--ink); width: 100%; max-width: 640px; max-height: 100%; overflow-y: auto; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.sheet-bg { background: rgba(17, 28, 42, 0.45); background: color-mix(in srgb, var(--ink) 45%, transparent); align-items: center; justify-content: flex-end; padding: 12px; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+.sheet { background: var(--surface); color: var(--ink); width: 100%; max-width: 640px; max-height: 100%; overflow-y: auto; overscroll-behavior: contain; outline: none; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
 @media (min-width: 700px) { .sheet-bg { justify-content: center; } }
 .sheet h3 { margin: 0; font-size: 1.35rem; }
 .sheet p { margin: 0; color: var(--muted); max-width: 65ch; }
@@ -180,6 +227,9 @@ h2 { font-size: 1rem; margin: 0; letter-spacing: 0.06em; text-transform: upperca
 @media (max-width: 460px) { .two { grid-template-columns: 1fr; } }
 .key { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
 .key span { border-radius: 8px; padding: 6px 10px; font-weight: 700; font-size: 0.9rem; }
+.app-foot { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 0.85rem; }
+.app-foot img { width: 36px; height: 36px; }
+.linkbox { width: 100%; border: 1.5px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 10px 12px; min-height: 44px; }
 .notice { background: var(--p-t); border-left: 5px solid var(--p-e); padding: 10px 12px; border-radius: 8px; font-size: 0.95rem; color: var(--ink); }
 
 #show { background: var(--surface); color: var(--ink); z-index: 60; }
@@ -187,11 +237,12 @@ h2 { font-size: 1rem; margin: 0; letter-spacing: 0.06em; text-transform: upperca
 #showText { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px 24px 40px; font-weight: 700; line-height: 1.12; overflow: hidden; overflow-wrap: anywhere; transition: transform .3s; }
 #showText.flip { transform: rotate(180deg); }
 #sos { background: var(--danger); color: var(--danger-ink); z-index: 70; }
-#sos .bar .btn { background: color-mix(in srgb, var(--danger-ink) 14%, transparent); border-color: color-mix(in srgb, var(--danger-ink) 40%, transparent); color: var(--danger-ink); }
+#sos .bar .btn { background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.4); background: color-mix(in srgb, var(--danger-ink) 14%, transparent); border-color: color-mix(in srgb, var(--danger-ink) 40%, transparent); color: var(--danger-ink); }
 .sos-body { flex: 1; overflow-y: auto; padding: 8px 20px 32px; display: flex; flex-direction: column; gap: 16px; align-items: center; text-align: center; justify-content: center; }
 .sos-big { font-size: clamp(2.4rem, 10vw, 5.5rem); font-weight: 700; line-height: 1.05; margin: 0; }
 .sos-hi { font-family: var(--font-hi); font-size: clamp(2rem, 8vw, 4.5rem); font-weight: 700; line-height: 1.2; margin: 0; }
 .sos-info { font-size: clamp(1.1rem, 4vw, 1.6rem); max-width: 40ch; display: flex; flex-direction: column; gap: 6px; }
+.sos-info a { color: inherit; }
 .sos-info .num { font-size: clamp(1.6rem, 7vw, 2.6rem); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0.03em; user-select: all; }
 
 #toast { position: fixed; left: 50%; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 12px; font-weight: 700; z-index: 90; max-width: calc(100% - 32px); text-align: center; }
@@ -214,10 +265,13 @@ h2 { font-size: 1rem; margin: 0; letter-spacing: 0.06em; text-transform: upperca
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
+</head>
+<body>
+<noscript><p style="padding:16px;font-size:18px">Bolo needs JavaScript to work. Please turn on JavaScript in your browser settings and reload this page.</p></noscript>
 
 <div id="app">
   <header class="top">
-    <div class="brand"><b>Bolo</b><span>बोलो</span></div>
+    <div class="brand"><img src="icons/icon.svg" alt="" width="32" height="32"><b>Bolo</b><span>बोलो</span></div>
     <div class="seg" role="group" aria-label="Language">
       <button id="lang-en" aria-pressed="true">EN</button>
       <button id="lang-hi" aria-pressed="false" class="hi">हिं</button>
@@ -335,7 +389,7 @@ h2 { font-size: 1rem; margin: 0; letter-spacing: 0.06em; text-transform: upperca
 </div>
 
 <div class="overlay sheet-bg" id="sheetWrap" hidden>
-  <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" tabindex="-1"></div>
 </div>
 
 <div id="catcher" hidden>
@@ -611,6 +665,14 @@ const LEX = ('i you the to a and is it that my me please need want help can not 
 const LEXRANK = {};
 LEX.forEach((w, i) => { if (!(w in LEXRANK)) LEXRANK[w] = i; });
 
+/* ---------------- App info ---------------- */
+const APP_VERSION = '1.1.0';
+const APP_URL = 'https://bolo.pi3.in/';
+const TAGLINE = 'Tap. Speak. Be heard.';
+const SHARE_TEXT = 'Bolo is a free talking board for people who cannot speak. Tap pictures or type, and the phone speaks in English or Hindi.';
+// Contact address is put together only when Settings opens, so it never appears in the page source for email-harvesting bots.
+const contactAddress = () => ['bo', 'lo'].join('') + String.fromCharCode(64) + ['pi3', 'in'].join('.');
+
 /* ---------------- State ---------------- */
 const STORE_KEY = 'bolo.v1';
 const DEFAULT_STATE = {
@@ -625,6 +687,8 @@ let lastSpoken = '';
 let cat = 'core';
 let mode = 'board';
 let editing = false;
+let sample = false; // true while the opening example sentence is showing
+let sheetKind = null;
 const pain = { part: null, level: null, kinds: new Set(), time: null };
 
 function load() {
@@ -675,9 +739,17 @@ function toast(msg, ms = 2600) {
   const t = $('#toast'); t.textContent = msg; t.hidden = false;
   clearTimeout(toastTimer); toastTimer = setTimeout(() => (t.hidden = true), ms);
 }
+function imgFor(t) {
+  if (t.img) return t.img;
+  if (!t.id) return '';
+  if (S.over[t.id] && S.over[t.id].img) return S.over[t.id].img;
+  for (const list of Object.values(S.custom)) { const x = (list || []).find(y => y.id === t.id); if (x) return x.img || ''; }
+  return '';
+}
 function symbolNode(t, cls = 'sym') {
   const s = el('span', { class: cls, 'aria-hidden': 'true' });
-  if (t.img) s.append(el('img', { src: t.img, alt: '' })); else s.textContent = t.e || '💬';
+  const src = imgFor(t);
+  if (src) s.append(el('img', { src, alt: '' })); else s.textContent = t.e || '💬';
   return s;
 }
 function ui(key) { return UI[key][L() === 'hi' ? 1 : 0]; }
@@ -686,7 +758,7 @@ function ui(key) { return UI[key][L() === 'hi' ? 1 : 0]; }
 const synth = window.speechSynthesis || null;
 let voices = [];
 function loadVoices() { if (synth) voices = synth.getVoices(); if (!$('#sheetWrap').hidden && sheetKind === 'settings') fillVoiceSelect(); }
-if (synth) { loadVoices(); synth.addEventListener?.('voiceschanged', loadVoices); }
+if (synth) { loadVoices(); if (synth.addEventListener) synth.addEventListener('voiceschanged', loadVoices); else synth.onvoiceschanged = loadVoices; }
 function voicesFor(lang) {
   return voices.filter(v => v.lang.toLowerCase().replace('_', '-').startsWith(lang));
 }
@@ -698,12 +770,20 @@ function pickVoice(lang) {
   return list.find(v => /-in$/i.test(v.lang.replace('_', '-'))) || list.find(v => v.localService) || list[0];
 }
 let noVoiceWarned = { en: false, hi: false };
+// Pick the voice from the words themselves: Hindi script -> Hindi voice, English letters only -> English voice.
+function langOf(text, fallback) {
+  if (/[\u0900-\u097F]/.test(text)) return 'hi';
+  if (/[A-Za-z]/.test(text)) return 'en';
+  return fallback;
+}
 function speak(text, lang = L()) {
   text = (text || '').trim();
   if (!text) return;
   lastSpoken = text;
+  lang = langOf(text, lang);
   if (!synth) { toast('This browser cannot speak aloud. Use Show to display your message.'); return; }
   synth.cancel();
+  if (synth.paused) synth.resume();
   const u = new SpeechSynthesisUtterance(text);
   const v = pickVoice(lang);
   if (v) { u.voice = v; u.lang = v.lang; } else {
@@ -723,7 +803,7 @@ function renderMsg() {
   const m = $('#msg'); m.replaceChildren();
   if (!sentence.length) { m.append(el('span', { class: 'ph', text: ui('ph') })); return; }
   sentence.forEach((t, i) => {
-    const chip = el('button', { class: 'chip' + (L() === 'hi' && !t.txt ? ' hi' : ''), 'aria-label': 'Remove ' + label(t), onclick: () => { sentence.splice(i, 1); renderMsg(); } });
+    const chip = el('button', { class: 'chip' + (L() === 'hi' && !t.txt ? ' hi' : ''), 'aria-label': 'Remove ' + label(t), onclick: () => { if (sample) { sentence = []; sample = false; } else sentence.splice(i, 1); renderMsg(); } });
     if (!t.txt) chip.append(symbolNode(t, 'e'));
     chip.append(label(t));
     m.append(chip);
@@ -731,17 +811,19 @@ function renderMsg() {
   m.scrollTop = m.scrollHeight;
 }
 function addWord(t) {
-  sentence.push({ id: t.id, e: t.e, img: t.img, en: t.en, hi: t.hi, hiF: t.hiF, txt: t.txt });
+  if (sample) { sentence = []; sample = false; } // the example sentence makes way for the user's own words
+  sentence.push({ id: t.id, e: t.e, en: t.en, hi: t.hi, hiF: t.hiF, txt: t.txt });
   renderMsg();
 }
 function speakSentence() {
   const text = sentence.length ? sentenceText() : lastSpoken;
   if (!text) { toast(L() === 'hi' ? 'पहले कुछ शब्द चुनें' : 'Pick some words first'); return; }
   speak(text);
-  if (sentence.length) {
+  if (sentence.length && !sample) {
     learn(text);
     const key = JSON.stringify(sentence.map(t => t.txt || t.id));
-    S.recent = [{ toks: structuredClone(sentence), k: key }, ...S.recent.filter(r => r.k !== key)].slice(0, 30);
+    const toks = sentence.map(({ img, ...rest }) => rest); // photos are looked up by id, not stored again
+    S.recent = [{ toks, k: key }, ...S.recent.filter(r => r.k !== key)].slice(0, 30);
     save();
     if (cat === 'recent') renderGrid();
   }
@@ -781,7 +863,7 @@ function tileNode(t) {
   if (t.recent) {
     const txt = t.recent.toks.map(x => label(x, lang)).join(' ');
     const sub = S.dual ? t.recent.toks.map(x => label(x, other(lang))).join(' ') : '';
-    return el('button', { class: 'tile phrase t-s', onclick: () => { sentence = structuredClone(t.recent.toks); renderMsg(); speak(txt); } },
+    return el('button', { class: 'tile phrase t-s', onclick: () => { sample = false; sentence = structuredClone(t.recent.toks); renderMsg(); speak(txt); } },
       el('span', { class: 'sym', 'aria-hidden': 'true', text: '🕘' }),
       el('span', { class: 'txt' }, el('span', { class: 'lab' + (lang === 'hi' ? ' hi' : ''), text: txt }), sub && sub !== txt ? el('span', { class: 'sub', text: sub }) : null));
   }
@@ -837,6 +919,7 @@ function predictions(text) {
   for (const [w, c] of Object.entries(S.learned.w)) if (w.startsWith(partial) && w !== partial) add(w, c * 6);
   if (partial || !prev) for (const w of LEX) if (w.startsWith(partial) && w !== partial) add(w, Math.max(1, 30 - LEXRANK[w] / 12));
   delete score[partial];
+  if (Object.keys(score).length < 6) for (const w of LEX) { if (!(w in score) && w.startsWith(partial) && w !== partial) score[w] = 0.5 - LEXRANK[w] / 10000; }
   return { partial, list: Object.entries(score).sort((a, b) => b[1] - a[1]).slice(0, 6).map(e => e[0]) };
 }
 function renderPreds() {
@@ -914,6 +997,7 @@ $('#painReset').addEventListener('click', () => { pain.part = null; pain.level =
 /* ---------------- Modes / language ---------------- */
 function setMode(m) {
   mode = m;
+  if (m !== 'board' && editing) { editing = false; document.body.classList.remove('editing'); renderCats(); renderGrid(); }
   document.querySelectorAll('.modes button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === m)));
   for (const v of ['board', 'type', 'pain']) $('#view-' + v).hidden = v !== m;
   if (m === 'type') { renderPreds(); renderSaved(); }
@@ -938,7 +1022,7 @@ function renderAll() { applyLook(); renderMsg(); renderQuick(); renderCats(); re
 
 /* ---------------- Strip actions ---------------- */
 $('#btnSpeak').addEventListener('click', speakSentence);
-$('#btnBack').addEventListener('click', () => { sentence.pop(); renderMsg(); });
+$('#btnBack').addEventListener('click', () => { if (sample) { sentence = []; sample = false; } else sentence.pop(); renderMsg(); });
 let backHold;
 $('#btnBack').addEventListener('pointerdown', () => { backHold = setTimeout(() => { sentence = []; renderMsg(); toast('Message cleared'); }, 700); });
 ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => $('#btnBack').addEventListener(ev, () => clearTimeout(backHold)));
@@ -971,7 +1055,6 @@ function sosLines() {
   if (s.why) en.push(s.why);
   return { en: ['I need help now.', ...en].join(' '), hi: ['मुझे अभी मदद चाहिए।', ...hi].join(' ') };
 }
-let sosLoop = null;
 function sosSpeak() {
   const { en, hi } = sosLines();
   if (!synth) return;
@@ -984,8 +1067,8 @@ function openSos() {
   if (s.name) info.append(el('div', { text: 'Name: ' + s.name }));
   if (s.why) info.append(el('div', { text: s.why }));
   if (s.notes) info.append(el('div', { text: s.notes }));
-  if (s.contact) info.append(el('div', { text: 'Please call:' }), el('div', { class: 'num', text: s.contact }));
-  if (!s.name && !s.why && !s.contact) info.append(el('div', { text: 'Add a name, medical details and an emergency number in Settings so they show here.' }));
+  if (s.contact) info.append(el('div', { text: 'Please call:' }), el('div', { class: 'num' }, el('a', { href: 'tel:' + s.contact.replace(/[^\d+]/g, ''), text: s.contact })));
+  if (!s.name && !s.why && !s.contact && !s.notes) info.append(el('div', { text: 'Add a name, medical details and an emergency number in Settings so they show here.' }));
   $('#sos').hidden = false;
   sosSpeak();
   $('#sosClose').focus();
@@ -995,13 +1078,12 @@ $('#sosSpeak').addEventListener('click', sosSpeak);
 $('#sosClose').addEventListener('click', () => { $('#sos').hidden = true; synth && synth.cancel(); });
 
 /* ---------------- Sheets (settings, editor, about) ---------------- */
-let sheetKind = null;
 function openSheet(kind, build) {
   sheetKind = kind;
   const sh = $('#sheet'); sh.replaceChildren(); build(sh);
   $('#sheetWrap').hidden = false;
   sh.scrollTop = 0;
-  (sh.querySelector('input,select,textarea,button') || sh).focus();
+  sh.focus({ preventScroll: true });
 }
 function closeSheet() { $('#sheetWrap').hidden = true; sheetKind = null; }
 $('#sheetWrap').addEventListener('click', e => { if (e.target.id === 'sheetWrap') closeSheet(); });
@@ -1064,18 +1146,75 @@ function openSettings() {
     );
     const data = el('div', { class: 'sec' },
       el('h2', { text: 'Your board' }),
-      el('p', { text: 'Your words, photos and settings stay on this device only. Copy a backup to move them to another phone or keep them safe.' }),
+      el('p', { text: 'Your words, photos and settings stay on this device only. Save a backup file to move them to another phone or keep them safe.' }),
       el('div', { class: 'row' },
+        el('button', { class: 'btn', onclick: saveBackupFile }, 'Save backup file'),
         el('button', { class: 'btn', onclick: copyBackup }, 'Copy backup'),
         el('button', { class: 'btn', onclick: openRestore }, 'Restore backup'),
         el('button', { class: 'btn', onclick: () => { S.hidden = []; save(); renderGrid(); toast('Hidden tiles are back'); } }, 'Show hidden tiles'),
         el('button', { class: 'btn', onclick: () => { S.learned = { w: {}, b: {} }; S.recent = []; save(); renderAll(); toast('Suggestions and recent messages cleared'); } }, 'Clear history'))
     );
-    sh.append(voice, look, access, sos, data, el('div', { class: 'row' }, el('button', { class: 'btn primary', onclick: closeSheet }, 'Done')));
+    const mail = contactAddress();
+    const app = el('div', { class: 'sec' },
+      el('h2', { text: 'Bolo app' }),
+      installBlock(),
+      el('p', { text: 'Know someone who could use Bolo? Share it with them, their family, a speech therapist or a hospital.' }),
+      el('div', { class: 'row' }, el('button', { class: 'btn', onclick: shareApp }, 'Share Bolo')),
+      el('p', { text: 'Questions, ideas, or a word Bolo should have? Write to us.' }),
+      el('div', { class: 'row' }, el('a', { class: 'btn', href: 'mailto:' + mail + '?subject=' + encodeURIComponent('Bolo feedback') }, 'Email ' + mail)),
+      el('div', { class: 'app-foot' }, el('img', { src: 'icons/icon.svg', alt: '' }), el('span', { text: `Bolo ${APP_VERSION} · ${TAGLINE}` }))
+    );
+    sh.append(voice, look, access, sos, data, app, el('div', { class: 'row' }, el('button', { class: 'btn primary', onclick: closeSheet }, 'Done')));
     fillVoiceSelect();
   });
 }
 $('#btnSettings').addEventListener('click', openSettings);
+
+function saveBackupFile() {
+  const data = JSON.stringify({ app: 'bolo', v: 1, state: S });
+  const a = el('a', { href: URL.createObjectURL(new Blob([data], { type: 'application/json' })), download: 'bolo-backup-' + new Date().toISOString().slice(0, 10) + '.json' });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast('Backup file saved to your downloads.', 3000);
+}
+
+/* Install as an app */
+let installEvt = null;
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; });
+window.addEventListener('appinstalled', () => { installEvt = null; toast('Bolo is installed. Open it from your home screen.', 3500); });
+function installBlock() {
+  if (isStandalone()) return el('p', { text: 'Bolo is installed on this device and works without internet.' });
+  if (installEvt) return el('div', { class: 'row' }, el('button', { class: 'btn primary', onclick: async () => {
+    const e = installEvt; installEvt = null;
+    try { await e.prompt(); const r = await e.userChoice; if (r && r.outcome === 'accepted') closeSheet(); } catch (err) { toast('Use your browser menu → Install app.'); }
+  } }, 'Install Bolo on this device'));
+  if (isIOS()) return el('p', { class: 'notice', text: 'To install Bolo: in Safari, tap the Share button, then “Add to Home Screen”. It then opens like an app and works without internet.' });
+  return el('p', { class: 'notice', text: 'To install Bolo: open your browser menu (⋮ or ⋯) and choose “Install app” or “Add to Home screen”. It then opens like an app and works without internet.' });
+}
+
+/* Share */
+async function shareApp() {
+  const data = { title: 'Bolo – ' + TAGLINE, text: SHARE_TEXT, url: APP_URL };
+  if (navigator.share) {
+    try { await navigator.share(data); return; }
+    catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  openSheet('share', sh => {
+    const link = el('input', { type: 'text', class: 'linkbox', readonly: true, value: APP_URL, 'aria-label': 'Link to Bolo' });
+    const msg = SHARE_TEXT + ' ' + APP_URL;
+    sh.append(el('h3', { text: 'Share Bolo' }), el('p', { text: SHARE_TEXT }), link,
+      el('div', { class: 'row' },
+        el('button', { class: 'btn primary', onclick: () => {
+          const ok = () => toast('Link copied');
+          try { navigator.clipboard.writeText(APP_URL).then(ok, () => { link.select(); document.execCommand('copy'); ok(); }); } catch (e) { link.select(); document.execCommand('copy'); ok(); }
+        } }, 'Copy link'),
+        el('a', { class: 'btn', href: 'https://wa.me/?text=' + encodeURIComponent(msg), target: '_blank', rel: 'noopener' }, 'WhatsApp'),
+        el('a', { class: 'btn', href: 'mailto:?subject=' + encodeURIComponent('Bolo – a free talking board') + '&body=' + encodeURIComponent(msg) }, 'Email'),
+        el('button', { class: 'btn', onclick: openSettings }, 'Back')));
+  });
+}
 
 function copyBackup() {
   const data = JSON.stringify({ app: 'bolo', v: 1, state: S });
@@ -1119,32 +1258,36 @@ async function readPhoto(file) {
 }
 function openEditor(tile) {
   const isNew = !tile;
+  // A custom tile may be edited from Type mode, so find the category it really lives in.
+  const owner = tile && !tile.def ? (Object.keys(S.custom).find(k => (S.custom[k] || []).some(x => x.id === tile.id)) || cat) : cat;
   const t = tile ? { ...tile } : { e: '⭐', en: '', hi: '', t: cat === 'phrases' || cat === 'mine' ? 's' : 'n', phrase: cat === 'phrases' || cat === 'mine' };
   let img = t.img || '';
   openSheet('editor', sh => {
     const preview = el('div', { class: 'grid', style: '--tile:110px;max-width:260px' });
-    const draw = () => { preview.replaceChildren(tileNode({ ...t, img, id: 'preview' })); preview.firstChild.disabled = true; };
+    const draw = () => { preview.replaceChildren(tileNode({ ...t, img, id: 'preview' })); preview.firstChild.disabled = true; rmPhoto.hidden = !img; };
+    const rmPhoto = el('button', { class: 'btn small', onclick: () => { img = ''; photoIn.value = ''; draw(); } }, 'Remove photo');
+    const photoIn = el('input', { type: 'file', id: 'ed-photo', accept: 'image/*', onchange: async e => { const f = e.target.files[0]; if (!f) return; try { img = await readPhoto(f); draw(); } catch (err) { toast('That image could not be read. Try a JPG or PNG.'); } } });
     const inp = (k, lab, ph, hint) => field('ed-' + k, lab, el('input', { type: 'text', id: 'ed-' + k, value: t[k] || '', placeholder: ph, class: k.startsWith('hi') ? 'hi' : '', oninput: e => { t[k] = e.target.value; draw(); } }), hint);
     sh.append(el('h3', { text: isNew ? 'Add a tile' : 'Edit tile' }), preview,
       el('div', { class: 'two' }, inp('en', 'English word or phrase', 'e.g. Grandma Asha'), inp('hi', 'Hindi word or phrase', 'e.g. आशा दादी')),
       el('div', { class: 'two' },
         inp('e', 'Symbol (emoji)', '⭐', 'Or use a photo below.'),
         field('ed-type', 'Colour group', selectEl('ed-type', Object.entries(TYPES).map(([k, v]) => [k, `${v.en} – ${v.c}`]), t.t, v => { t.t = v; draw(); }))),
-      field('ed-photo', 'Photo (a real person, food or place works best)', el('input', { type: 'file', id: 'ed-photo', accept: 'image/*', onchange: async e => { const f = e.target.files[0]; if (!f) return; try { img = await readPhoto(f); draw(); } catch (err) { toast('That image could not be read. Try a JPG or PNG.'); } } })),
-      img ? el('button', { class: 'btn small', onclick: e => { img = ''; e.target.remove(); draw(); } }, 'Remove photo') : null,
+      field('ed-photo', 'Photo (a real person, food or place works best)', photoIn),
+      el('div', { class: 'row' }, rmPhoto),
       checkbox('ed-phrase', 'Speak as a whole sentence (wide tile)', t.phrase, v => { t.phrase = v; draw(); }),
       el('div', { class: 'row' },
         el('button', { class: 'btn primary', onclick: () => {
           if (!t.en.trim() && !t.hi.trim()) { toast('Add a word in English or Hindi'); return; }
           const rec = { e: t.e, en: t.en.trim(), hi: t.hi.trim(), hiF: t.hiF || '', t: t.t, phrase: !!t.phrase, img };
           if (tile && tile.def) { S.over[tile.id] = { ...rec, hiF: rec.hi === BYID[tile.id].hi ? BYID[tile.id].hiF : '' }; }
-          else if (tile) { const list = S.custom[cat] || []; const i = list.findIndex(x => x.id === tile.id); if (i > -1) list[i] = { ...list[i], ...rec }; }
-          else { (S.custom[cat] ||= []).push({ id: 'c' + Date.now(), ...rec }); }
-          save(); closeSheet(); renderGrid(); toast('Saved');
+          else if (tile) { const list = S.custom[owner] || []; const i = list.findIndex(x => x.id === tile.id); if (i > -1) list[i] = { ...list[i], ...rec }; }
+          else { (S.custom[owner] ||= []).push({ id: 'c' + Date.now(), ...rec }); }
+          save(); closeSheet(); renderGrid(); if (mode === 'type') renderSaved(); renderMsg(); toast('Saved');
         } }, 'Save'),
         tile && tile.def ? el('button', { class: 'btn', onclick: () => { S.hidden.push(tile.id); save(); closeSheet(); renderGrid(); toast('Tile hidden. Settings → Show hidden tiles brings it back.'); } }, 'Hide tile') : null,
         tile && tile.def && S.over[tile.id] ? el('button', { class: 'btn', onclick: () => { delete S.over[tile.id]; save(); closeSheet(); renderGrid(); } }, 'Reset to original') : null,
-        tile && !tile.def ? el('button', { class: 'btn danger', onclick: () => { S.custom[cat] = (S.custom[cat] || []).filter(x => x.id !== tile.id); save(); closeSheet(); renderGrid(); if (mode === 'type') renderSaved(); toast('Tile deleted'); } }, 'Delete tile') : null,
+        tile && !tile.def ? el('button', { class: 'btn danger', onclick: () => { S.custom[owner] = (S.custom[owner] || []).filter(x => x.id !== tile.id); save(); closeSheet(); renderGrid(); if (mode === 'type') renderSaved(); toast('Tile deleted'); } }, 'Delete tile') : null,
         el('button', { class: 'btn', onclick: closeSheet }, 'Cancel')));
     draw();
   });
@@ -1153,15 +1296,15 @@ function openEditor(tile) {
 /* About */
 function openAbout() {
   openSheet('about', sh => {
-    sh.append(el('h3', { text: 'About Bolo' }),
+    sh.append(el('div', { class: 'app-foot' }, el('img', { src: 'icons/icon.svg', alt: '' }), el('span', { text: TAGLINE })), el('h3', { text: 'About Bolo' }),
       el('p', { text: 'Bolo (“speak” in Hindi) is a free talking board for people who cannot rely on speech: autistic children and adults, people after a stroke, people living with ALS, cerebral palsy or Parkinson’s, and patients on a ventilator or recovering from surgery. Tap pictures or type, and the phone speaks for you in English or Hindi.' }),
       el('div', { class: 'sec' }, el('h2', { text: 'How to use it' }),
-        el('p', { text: '1. Tap tiles to build a message, then press Speak. 2. Yes, No, Don’t know and Wait speak instantly. 3. Pain mode builds a full description for doctors and nurses. 4. Show puts the message in huge text; Flip turns it to face the person opposite you. 5. Hold the delete key to clear the whole message. 6. Build a sentence in English, switch to Hindi, and the same message speaks in Hindi.' })),
+        el('p', { text: '1. Tap tiles to build a message, then press Speak. 2. Yes, No, Don’t know and Wait speak instantly. 3. Pain mode builds a full description for doctors and nurses. 4. Show puts the message in huge text; Flip turns it to face the person opposite you. 5. Hold the delete key to clear the whole message. 6. Build a sentence in English, switch to Hindi, and the same message speaks in Hindi. 7. Install Bolo from Settings; once opened, it keeps working without internet.' })),
       el('div', { class: 'sec' }, el('h2', { text: 'Colour key' }),
         el('p', { text: 'Tiles use the Modified Fitzgerald Key, the colour system speech therapists use on communication boards, so skills carry over between boards.' }),
         el('div', { class: 'key' }, ...Object.entries(TYPES).map(([k, v]) => el('span', { class: 't-' + k, text: v.en })))),
       el('div', { class: 'sec' }, el('h2', { text: 'Privacy' }),
-        el('p', { text: 'No account, no ads, no tracking. Everything you add stays on this device. Speech uses the voices built into your phone.' })),
+        el('p', { text: 'No account, no ads, no tracking. Everything you add stays on this device. Speech uses the voices built into your phone. Share Bolo and contact us from Settings.' })),
       el('div', { class: 'sec' }, el('h2', { text: 'Good to know' }),
         el('p', { text: 'Bolo is a communication aid, not a medical device. In an emergency, it shows your details to people nearby but cannot call anyone. A speech-language therapist can help choose and teach the right vocabulary.' })),
       el('div', { class: 'row' }, el('button', { class: 'btn primary', onclick: closeSheet }, 'Close')));
@@ -1245,8 +1388,14 @@ document.addEventListener('keydown', e => {
 const hash = location.hash.replace('#', '');
 setLang(S.lang);
 if (['type', 'pain'].includes(hash)) setMode(hash);
-// Opening example so the first screen shows what Bolo does; cleared by the first tap on delete.
-if (!S.recent.length) { sentence = [BYID.i, BYID.want, BYID.water, BYID.please].map(t => ({ ...t })); renderMsg(); }
+// Opening example so the first screen shows what Bolo does; the first tile tap or delete replaces it.
+if (!S.recent.length) { sentence = [BYID.i, BYID.want, BYID.water, BYID.please].map(t => ({ ...t })); sample = true; renderMsg(); }
+if (hash === 'help') openSos();
+
+// Offline support: keeps Bolo working without internet once it has been opened.
+if ('serviceWorker' in navigator && window.isSecureContext) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
 })();
 </script>
 
